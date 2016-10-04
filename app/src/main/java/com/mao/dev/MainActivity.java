@@ -1,4 +1,4 @@
-package com.mao.moc_dev;
+package com.mao.dev;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

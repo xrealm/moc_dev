@@ -1,4 +1,4 @@
-package com.mao.moc_dev;
+package com.mao.dev;
 
 import org.junit.Test;
 
