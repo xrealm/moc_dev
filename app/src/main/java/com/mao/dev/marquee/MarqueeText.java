@@ -124,6 +124,7 @@ public class MarqueeText extends TextView {
 
     public void stopScroll() {
         cancelAnimation();
+        scrollTo(0, 0);
         isScroll = false;
     }
 
