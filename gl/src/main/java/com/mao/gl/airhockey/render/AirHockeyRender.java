@@ -19,47 +19,54 @@ import javax.microedition.khronos.opengles.GL10;
 public class AirHockeyRender implements GLSurfaceView.Renderer {
 
     private static final int POSITION_COMPONENT_COUNT = 2;
+    private static final int COLOR_COMPONENT_COUNT = 3;
     private static final int BYTES_PER_FLOAT = 4;
-    private static final String U_COLOR = "u_Color";
     private static final String A_POSITION = "a_Position";
+    private static final String A_COLOR = "a_Color";
+    //数组跨距
+    private static final int STRIDE = (POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT) * BYTES_PER_FLOAT;
+    private int aColorLocation;
 
+    // varying 混合
     private static final String VERTEX_SHADER =
             "attribute vec4 a_Position;\n"
+                    + "attribute vec4 a_Color;\n"
+                    + "varying vec4 v_Color;\n"
                     + "void main() {\n"
+                    + "v_Color = a_Color;\n"
                     + "gl_Position = a_Position;\n"
                     + "gl_PointSize = 5.0;\n"
                     + "}";
 
     private static final String FRAGMENT_SHADER =
             "precision mediump float;\n"
-                    + "uniform vec4 u_Color;\n"
+                    + "varying vec4 v_Color;\n"
                     + "void main() {\n"
-                    + "gl_FragColor = u_Color;\n"
+                    + "gl_FragColor = v_Color;\n"
                     + "}";
 
     private final FloatBuffer mVertexData;
     private int program;
-    private int uColorLocation;
     private int aPositionLocation;
 
     public AirHockeyRender() {
         //逆时针排列三角形顶点,卷曲顺序
         float[] tableVertices = {
-                -0.5f, -0.5f,
-                0.5f, 0.5f,
-                -0.5f, 0.5f,
-
-                -0.5f, -0.5f,
-                0.5f, -0.5f,
-                0.5f, 0.5f,
+                // x,y,r,g,b
+                0f, 0f, 1f, 1f, 1f,
+                -0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
+                0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
+                0.5f, 0.5f, 0.7f, 0.7f, 0.7f,
+                -0.5f, 0.5f, 0.7f, 0.7f, 0.7f,
+                -0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
 
                 //line1
-                -0.5f, 0,
-                0.5f, 0,
+                -0.5f, 0, 1f, 0f, 0f,
+                0.5f, 0, 1f, 0f, 0f,
 
                 //mallets
-                0, -0.25f,
-                0, 0.25f
+                0, -0.25f, 0f, 0f, 1f,
+                0, 0.25f, 1f, 0f, 0f
         };
 
         //分配本地内存
@@ -87,15 +94,23 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
         ShaderHelper.validateProgram(program);
         GLES20.glUseProgram(program);
 
-        // 获取uniform位置,存入
-        uColorLocation = GLES20.glGetUniformLocation(program, U_COLOR);
         //获取属性位置
         aPositionLocation = GLES20.glGetAttribLocation(program, A_POSITION);
+
+        // varying a_Color
+        aColorLocation = GLES20.glGetAttribLocation(program, A_COLOR);
         //移动指针到开头处
         mVertexData.position(0);
         GLES20.glVertexAttribPointer(aPositionLocation, POSITION_COMPONENT_COUNT, GLES20.GL_FLOAT,
-                false, 0, mVertexData);
+                false, STRIDE, mVertexData);
         GLES20.glEnableVertexAttribArray(aPositionLocation);
+
+        // 调到第一个颜色属性
+        mVertexData.position(POSITION_COMPONENT_COUNT);
+        // 把颜色数据和shader中a_Color关联起来
+        GLES20.glVertexAttribPointer(aColorLocation, COLOR_COMPONENT_COUNT, GLES20.GL_FLOAT,
+                false, STRIDE, mVertexData);
+        GLES20.glEnableVertexAttribArray(aColorLocation);
     }
 
     @Override
@@ -108,20 +123,17 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
     public void onDrawFrame(GL10 gl) {
         // 清空屏幕
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-        // 更新u_Color值
-        GLES20.glUniform4f(uColorLocation, 1f, 1f, 1f, 1f);
         //绘制三角形
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
+//        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
+        // 三角形扇
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, 6);
 
         //绘制分隔线
-        GLES20.glUniform4f(uColorLocation, 1f, 0, 0, 1f);
         GLES20.glDrawArrays(GLES20.GL_LINES, 6, 2);
 
         //绘制木槌
-        GLES20.glUniform4f(uColorLocation, 0, 0, 1f, 1f);
         GLES20.glDrawArrays(GLES20.GL_POINTS, 8, 1);
 
-        GLES20.glUniform4f(uColorLocation, 1, 0, 0, 1);
         GLES20.glDrawArrays(GLES20.GL_POINTS, 9, 1);
 
         //绘制
