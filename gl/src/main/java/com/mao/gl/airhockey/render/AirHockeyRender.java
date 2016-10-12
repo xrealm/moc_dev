@@ -2,6 +2,7 @@ package com.mao.gl.airhockey.render;
 
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.opengl.Matrix;
 
 import com.mao.gl.airhockey.util.ShaderHelper;
 
@@ -23,18 +24,24 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
     private static final int BYTES_PER_FLOAT = 4;
     private static final String A_POSITION = "a_Position";
     private static final String A_COLOR = "a_Color";
+    private static final String U_MATRIX = "u_Matrix";
     //数组跨距
     private static final int STRIDE = (POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT) * BYTES_PER_FLOAT;
     private int aColorLocation;
+    // 存储矩阵
+    private final float[] projectionMatrix = new float[16];
+    //保存矩阵uniform位置
+    private int uMatrixLocation;
 
     // varying 混合
     private static final String VERTEX_SHADER =
-            "attribute vec4 a_Position;\n"
+            "uniform mat4 " + U_MATRIX + ";\n"
+                    + "attribute vec4 a_Position;\n"
                     + "attribute vec4 a_Color;\n"
                     + "varying vec4 v_Color;\n"
                     + "void main() {\n"
                     + "v_Color = a_Color;\n"
-                    + "gl_Position = a_Position;\n"
+                    + "gl_Position = u_Matrix * a_Position;\n"
                     + "gl_PointSize = 5.0;\n"
                     + "}";
 
@@ -54,19 +61,19 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
         float[] tableVertices = {
                 // x,y,r,g,b
                 0f, 0f, 1f, 1f, 1f,
-                -0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
-                0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
-                0.5f, 0.5f, 0.7f, 0.7f, 0.7f,
-                -0.5f, 0.5f, 0.7f, 0.7f, 0.7f,
-                -0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
+                -0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
+                0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
+                0.5f, 0.8f, 0.7f, 0.7f, 0.7f,
+                -0.5f, 0.8f, 0.7f, 0.7f, 0.7f,
+                -0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
 
                 //line1
                 -0.5f, 0, 1f, 0f, 0f,
                 0.5f, 0, 1f, 0f, 0f,
 
                 //mallets
-                0, -0.25f, 0f, 0f, 1f,
-                0, 0.25f, 1f, 0f, 0f
+                0, -0.4f, 0f, 0f, 1f,
+                0, 0.4f, 1f, 0f, 0f
         };
 
         //分配本地内存
@@ -111,18 +118,29 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
         GLES20.glVertexAttribPointer(aColorLocation, COLOR_COMPONENT_COUNT, GLES20.GL_FLOAT,
                 false, STRIDE, mVertexData);
         GLES20.glEnableVertexAttribArray(aColorLocation);
+
+        uMatrixLocation = GLES20.glGetUniformLocation(program, U_MATRIX);
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         //指定视图尺寸
         GLES20.glViewport(0, 0, width, height);
+
+        //创建正交投影矩阵
+        final float aspectRatio = width > height ? (float) width / (float) height : (float) height / (float) width;
+        if (width > height) {
+            Matrix.orthoM(projectionMatrix, 0, -aspectRatio, aspectRatio, -1f, 1f, -1f, 1f);
+        } else {
+            Matrix.orthoM(projectionMatrix, 0, -1f, 1f, -aspectRatio, aspectRatio, -1f, 1f);
+        }
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
         // 清空屏幕
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+        GLES20.glUniformMatrix4fv(uMatrixLocation, 1, false, projectionMatrix, 0);
         //绘制三角形
 //        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
         // 三角形扇
