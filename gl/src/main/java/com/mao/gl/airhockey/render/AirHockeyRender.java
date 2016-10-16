@@ -30,6 +30,7 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
     private int aColorLocation;
     // 存储矩阵
     private final float[] projectionMatrix = new float[16];
+    private final float[] modelMatrix = new float[16];
     //保存矩阵uniform位置
     private int uMatrixLocation;
 
@@ -128,12 +129,27 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
         GLES20.glViewport(0, 0, width, height);
 
         //创建正交投影矩阵
-        final float aspectRatio = width > height ? (float) width / (float) height : (float) height / (float) width;
-        if (width > height) {
-            Matrix.orthoM(projectionMatrix, 0, -aspectRatio, aspectRatio, -1f, 1f, -1f, 1f);
-        } else {
-            Matrix.orthoM(projectionMatrix, 0, -1f, 1f, -aspectRatio, aspectRatio, -1f, 1f);
-        }
+//        final float aspectRatio = width > height ? (float) width / (float) height : (float) height / (float) width;
+//        if (width > height) {
+//            Matrix.orthoM(projectionMatrix, 0, -aspectRatio, aspectRatio, -1f, 1f, -1f, 1f);
+//        } else {
+//            Matrix.orthoM(projectionMatrix, 0, -1f, 1f, -aspectRatio, aspectRatio, -1f, 1f);
+//        }
+
+        //使用投影矩阵
+        Matrix.perspectiveM(projectionMatrix, 0, 45, (float) width / (float) height, 1f, 10f);
+        //模型矩阵设为单位矩阵
+        Matrix.setIdentityM(modelMatrix, 0);
+        // 沿z轴平移 -2
+        // z平移
+        Matrix.translateM(modelMatrix, 0, 0, 0, -2.5f);
+        // 旋转-60
+        Matrix.rotateM(modelMatrix, 0, -60f, 1f, 0, 0);
+        // 投影矩阵和模型矩阵相乘
+        float[] temp = new float[16];
+        Matrix.multiplyMM(temp, 0, projectionMatrix, 0, modelMatrix, 0);
+        //结果放回投影矩阵
+        System.arraycopy(temp, 0, projectionMatrix, 0, temp.length);
     }
 
     @Override
