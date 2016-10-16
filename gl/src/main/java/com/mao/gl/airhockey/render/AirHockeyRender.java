@@ -53,6 +53,24 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
                     + "gl_FragColor = v_Color;\n"
                     + "}";
 
+    private static final String TEXTURE_VERTEX_SHADER =
+            "uniform mat4 u_Matrix;\n"
+                    + "attribute vec4 a_Position;\n"
+                    + "attribute vec4 a_TextureCoordinates;\n"
+                    + "varying vec2 v_TextureCoordinates;\n"
+                    + "void main() {\n"
+                    + "v_TextureCoordinates = a_TextureCoordinates;\n"
+                    + "gl_Position = u_Matrix * a_Position;\n"
+                    + "}";
+
+    private static final String texture_fragment_shader =
+            "precision mediump float;\n"
+                    +"uniform sampler2D u_TextureUnit;\n" //二维纹理数据数组
+                    +"varying vec2 v_TextureCoordinates;\n"
+                    +"void main() {\n"
+                    +"gl_FragColor = texture2D(u_TextureUnit, v_TextureCoordinates);\n"
+                    + "}";
+
     private final FloatBuffer mVertexData;
     private int program;
     private int aPositionLocation;
