@@ -4,13 +4,13 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <com.mao.dev.autosize.AutoEditText
+    <com.mao.dev.autosize.AutoSizeEditText
         android:id="@+id/tv_autosize"
         android:textSize="17sp"
         android:layout_width="200dp"
         android:maxLines="1"
         android:singleLine="true"
         android:layout_gravity="center_horizontal"
-        android:layout_height="wrap_content"/>
+        android:layout_height="35dp"/>
 
 </LinearLayout>

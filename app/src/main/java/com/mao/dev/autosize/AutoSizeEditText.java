@@ -8,7 +8,6 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.widget.EditText;
 
@@ -16,28 +15,37 @@ import android.widget.EditText;
  * Created by Mao on 2016/10/18.
  */
 
-public class AutoEditText extends EditText{
+public class AutoSizeEditText extends EditText{
     private static final int ANIMATION_DURATION = 300;
 
     private int mLineLimit = 1;
-    private boolean mResizeInProgress;
+    private boolean mIsResize;
     private int mMaxWidth;
+    private float mOriginTextSize;
 
-    public AutoEditText(Context context) {
+    public AutoSizeEditText(Context context) {
         super(context);
+        init();
     }
 
-    public AutoEditText(Context context, AttributeSet attrs) {
+    public AutoSizeEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
     }
 
-    public AutoEditText(Context context, AttributeSet attrs, int defStyleAttr) {
+    public AutoSizeEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public AutoEditText(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public AutoSizeEditText(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init();
+    }
+
+    private void init() {
+        mOriginTextSize = getTextSize();
     }
 
     @Override
@@ -49,9 +57,10 @@ public class AutoEditText extends EditText{
     @Override
     protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter);
-
+        if (mIsResize) {
+            return;
+        }
         float linesNeeded = calculateNumberOfLinesNeeded();
-        Log.d("mpg", "linesNeed = " + linesNeeded);
         if (linesNeeded > mLineLimit) {
             zoomOutTextSize();
         } else {
@@ -61,27 +70,33 @@ public class AutoEditText extends EditText{
 
     private void zoomOutTextSize() {
         Paint measurePaint = getMeasurePaint();
-        Log.d("mpg", "zoom out, textsize=" + getTextSize() + ", paintsize=" + measurePaint.getTextSize());
         float textWidth = 0;
-        textWidth = measurePaint.measureText(getText().toString());
-        // 先做1行处理
+        String content = getText().toString();
+        textWidth = measurePaint.measureText(content);
+        // 先只做1行处理
         while (textWidth > mMaxWidth) {
             measurePaint.setTextSize(measurePaint.getTextSize() - 1);
-            textWidth = measurePaint.measureText(getText().toString());
+            textWidth = measurePaint.measureText(content);
         }
-        Log.d("mpg", "textsize = " + measurePaint.getTextSize());
         playAnimation(getPaint().getTextSize(), measurePaint.getTextSize());
     }
 
     private void zoomInTextSize() {
-        if (getPaint().getTextSize() <= getTextSize()) {
+        if (mOriginTextSize <= getTextSize()) {
             return;
         }
-        //先做一行处理
-        Paint measurePaint = getMeasurePaint();
+        //先只做一行处理
         float textWidth = 0;
-        textWidth = measurePaint.measureText(getText().toString());
-
+        String content = getText().toString();
+        Paint measurePaint = getMeasurePaint();
+        while (measurePaint.getTextSize() < mOriginTextSize) {
+            textWidth = measurePaint.measureText(content);
+            if (textWidth >= mMaxWidth) {
+                break;
+            }
+            measurePaint.setTextSize(measurePaint.getTextSize() + 1);
+        }
+        playAnimation(getPaint().getTextSize(), measurePaint.getTextSize());
     }
 
     private Paint getMeasurePaint() {
@@ -108,13 +123,13 @@ public class AutoEditText extends EditText{
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                mResizeInProgress = false;
+                mIsResize = false;
             }
 
             @Override
             public void onAnimationStart(Animator animation) {
                 super.onAnimationStart(animation);
-                mResizeInProgress = true;
+                mIsResize = true;
             }
         });
         animator.start();
