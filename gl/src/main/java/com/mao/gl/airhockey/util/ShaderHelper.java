@@ -58,10 +58,10 @@ public class ShaderHelper {
         //检查是否链接成功
         int[] linkStatus = new int[1];
         GLES20.glGetProgramiv(programId, GLES20.GL_LINK_STATUS, linkStatus, 0);
-        Log.v(TAG, "Results of linking program:\n" + GLES20.glGetProgramInfoLog(programId));
+        Log.v(TAG, "Results of linking mProgram:\n" + GLES20.glGetProgramInfoLog(programId));
         if (linkStatus[0] == 0) {
             GLES20.glDeleteProgram(programId);
-            Log.w(TAG, "Linking of program failed.");
+            Log.w(TAG, "Linking of mProgram failed.");
         }
         return programId;
     }
@@ -76,5 +76,16 @@ public class ShaderHelper {
         int[] validateStatus = new int[1];
         GLES20.glGetProgramiv(programId, GL_VALIDATE_STATUS, validateStatus, 0);
         return validateStatus[0] != 0;
+    }
+
+    public static int buildProgram(String vertexShader, String fragmentShader) {
+        int program;
+        int vertex = compileVertexShader(vertexShader);
+        int fragment = complieFragmentShader(fragmentShader);
+        //link
+        program = linkProgram(vertex, fragment);
+        //validate
+        validateProgram(program);
+        return program;
     }
 }
