@@ -1,5 +1,7 @@
 package com.mao.gl.airhockey.model;
 
+import android.opengl.GLES20;
+
 import com.mao.gl.airhockey.Constants;
 import com.mao.gl.airhockey.data.VertexArray;
 import com.mao.gl.airhockey.program.TextureShaderProgram;
@@ -18,6 +20,10 @@ public class Table {
             // order of coordinates x, y, s, t
             0,     0,     0.5f, 0.5f,
             -0.5f, -0.8f, 0f, 0.9f,
+            0.5f, -0.8f,  1f, 0.9f,
+            0.5f, 0.8f,  1f, 0.1f,
+            -0.5f, 0.8f,  0f, 0.1f,
+            -0.5f, -0.8f, 0f, 0.9f
     };
     private final VertexArray mVertexArray;
 
@@ -26,6 +32,20 @@ public class Table {
     }
 
     public void bindData(TextureShaderProgram textureProgram) {
+        //位置数据绑定到着色器
+        mVertexArray.setVertexAttribPointer(0,
+                textureProgram.getPositionAttributeLocation(),
+                POSITION_COMPONENT_COUNT,
+                STRIDE);
 
+        //纹理坐标数据绑定到着色器
+        mVertexArray.setVertexAttribPointer(POSITION_COMPONENT_COUNT,
+                textureProgram.getTextureCoordinatesLocation(),
+                TEXTURE_COORDINATES_COMPONENT_COUNT,
+                STRIDE);
+    }
+
+    public void draw() {
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, 6);
     }
 }

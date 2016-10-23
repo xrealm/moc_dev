@@ -22,7 +22,7 @@ public class AirHockeyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_air_hockey);
         mGLSurfaceView = (GLSurfaceView) findViewById(R.id.gl_surfaceview);
         mGLSurfaceView.setEGLContextClientVersion(2);
-        mGLSurfaceView.setRenderer(new AirHockeyRender());
+        mGLSurfaceView.setRenderer(new AirHockeyRender(this));
     }
 
     @Override

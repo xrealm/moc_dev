@@ -1,10 +1,16 @@
 package com.mao.gl.airhockey.render;
 
+import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 
-import com.mao.gl.airhockey.util.ShaderHelper;
+import com.mao.gl.R;
+import com.mao.gl.airhockey.model.Mallet;
+import com.mao.gl.airhockey.model.Table;
+import com.mao.gl.airhockey.program.ColorShaderProgram;
+import com.mao.gl.airhockey.program.TextureShaderProgram;
+import com.mao.gl.airhockey.util.TextureHelper;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -13,26 +19,27 @@ import java.nio.FloatBuffer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import static com.mao.gl.airhockey.Constants.BYTES_PER_FLOAT;
+
 /**
  * Created by Mao on 16/10/10.
  */
 
 public class AirHockeyRender implements GLSurfaceView.Renderer {
 
-    private static final int POSITION_COMPONENT_COUNT = 2;
-    private static final int COLOR_COMPONENT_COUNT = 3;
-    private static final int BYTES_PER_FLOAT = 4;
     private static final String A_POSITION = "a_Position";
     private static final String A_COLOR = "a_Color";
     private static final String U_MATRIX = "u_Matrix";
-    //数组跨距
-    private static final int STRIDE = (POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT) * BYTES_PER_FLOAT;
-    private int aColorLocation;
     // 存储矩阵
     private final float[] projectionMatrix = new float[16];
     private final float[] modelMatrix = new float[16];
-    //保存矩阵uniform位置
-    private int uMatrixLocation;
+    private Table mTable;
+    private Mallet mMallet;
+
+    private TextureShaderProgram mTextureProgram;
+    private ColorShaderProgram mColorProgram;
+    private int mTexture;
+    private Context mContext;
 
     // varying 混合
     private static final String VERTEX_SHADER =
@@ -63,7 +70,7 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
                     + "gl_Position = u_Matrix * a_Position;\n"
                     + "}";
 
-    private static final String texture_fragment_shader =
+    private static final String TEXTURE_FRAGMENT_SHADER =
             "precision mediump float;\n"
                     +"uniform sampler2D u_TextureUnit;\n" //二维纹理数据数组
                     +"varying vec2 v_TextureCoordinates;\n"
@@ -71,35 +78,8 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
                     +"gl_FragColor = texture2D(u_TextureUnit, v_TextureCoordinates);\n"
                     + "}";
 
-    private final FloatBuffer mVertexData;
-    private int program;
-    private int aPositionLocation;
-
-    public AirHockeyRender() {
-        //逆时针排列三角形顶点,卷曲顺序
-        float[] tableVertices = {
-                // x,y,r,g,b
-                0f, 0f, 1f, 1f, 1f,
-                -0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
-                0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
-                0.5f, 0.8f, 0.7f, 0.7f, 0.7f,
-                -0.5f, 0.8f, 0.7f, 0.7f, 0.7f,
-                -0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
-
-                //line1
-                -0.5f, 0, 1f, 0f, 0f,
-                0.5f, 0, 1f, 0f, 0f,
-
-                //mallets
-                0, -0.4f, 0f, 0f, 1f,
-                0, 0.4f, 1f, 0f, 0f
-        };
-
-        //分配本地内存
-        mVertexData = ByteBuffer.allocateDirect(tableVertices.length * BYTES_PER_FLOAT)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer();
-        mVertexData.put(tableVertices);
+    public AirHockeyRender(Context context) {
+        mContext = context;
     }
 
     private String getVertexShader() {
@@ -112,33 +92,14 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        //
-        GLES20.glClearColor(1, 1, 0, 0);
-        int vertexShader = ShaderHelper.compileVertexShader(VERTEX_SHADER);
-        int fragmentShader = ShaderHelper.complieFragmentShader(FRAGMENT_SHADER);
-        program = ShaderHelper.linkProgram(vertexShader, fragmentShader);
-        ShaderHelper.validateProgram(program);
-        GLES20.glUseProgram(program);
+        GLES20.glClearColor(0, 0, 0, 0);
+        mTable = new Table();
+        mMallet = new Mallet();
 
-        //获取属性位置
-        aPositionLocation = GLES20.glGetAttribLocation(program, A_POSITION);
+        mTextureProgram = new TextureShaderProgram(TEXTURE_VERTEX_SHADER, TEXTURE_FRAGMENT_SHADER);
+        mColorProgram = new ColorShaderProgram(VERTEX_SHADER, FRAGMENT_SHADER);
 
-        // varying a_Color
-        aColorLocation = GLES20.glGetAttribLocation(program, A_COLOR);
-        //移动指针到开头处
-        mVertexData.position(0);
-        GLES20.glVertexAttribPointer(aPositionLocation, POSITION_COMPONENT_COUNT, GLES20.GL_FLOAT,
-                false, STRIDE, mVertexData);
-        GLES20.glEnableVertexAttribArray(aPositionLocation);
-
-        // 调到第一个颜色属性
-        mVertexData.position(POSITION_COMPONENT_COUNT);
-        // 把颜色数据和shader中a_Color关联起来
-        GLES20.glVertexAttribPointer(aColorLocation, COLOR_COMPONENT_COUNT, GLES20.GL_FLOAT,
-                false, STRIDE, mVertexData);
-        GLES20.glEnableVertexAttribArray(aColorLocation);
-
-        uMatrixLocation = GLES20.glGetUniformLocation(program, U_MATRIX);
+        mTexture = TextureHelper.loadTexture(mContext, R.mipmap.air_hockey_surface);
     }
 
     @Override
@@ -174,20 +135,18 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
     public void onDrawFrame(GL10 gl) {
         // 清空屏幕
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-        GLES20.glUniformMatrix4fv(uMatrixLocation, 1, false, projectionMatrix, 0);
-        //绘制三角形
-//        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
-        // 三角形扇
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, 6);
 
-        //绘制分隔线
-        GLES20.glDrawArrays(GLES20.GL_LINES, 6, 2);
+        // draw table
+        mTextureProgram.useProgram();
+        // uniform
+        mTextureProgram.setUniforms(projectionMatrix, mTexture);
+        mTable.bindData(mTextureProgram);
+        mTable.draw();
 
-        //绘制木槌
-        GLES20.glDrawArrays(GLES20.GL_POINTS, 8, 1);
-
-        GLES20.glDrawArrays(GLES20.GL_POINTS, 9, 1);
-
-        //绘制
+        //draw the mallets
+        mColorProgram.useProgram();
+        mColorProgram.setUniforms(projectionMatrix);
+        mMallet.bindData(mColorProgram);
+        mMallet.draw();
     }
 }
