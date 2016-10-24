@@ -63,7 +63,7 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
     private static final String TEXTURE_VERTEX_SHADER =
             "uniform mat4 u_Matrix;\n"
                     + "attribute vec4 a_Position;\n"
-                    + "attribute vec4 a_TextureCoordinates;\n"
+                    + "attribute vec2 a_TextureCoordinates;\n"
                     + "varying vec2 v_TextureCoordinates;\n"
                     + "void main() {\n"
                     + "v_TextureCoordinates = a_TextureCoordinates;\n"
