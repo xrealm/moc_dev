@@ -1,5 +1,5 @@
 # moc_dev
 
 ```
-test
+chapter 7   用纹理增加细节
 ```
