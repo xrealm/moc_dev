@@ -13,14 +13,8 @@ import com.mao.gl.airhockey.program.ColorShaderProgram;
 import com.mao.gl.airhockey.program.TextureShaderProgram;
 import com.mao.gl.airhockey.util.TextureHelper;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-
-import static com.mao.gl.airhockey.Constants.BYTES_PER_FLOAT;
 
 /**
  * Created by Mao on 16/10/10.
