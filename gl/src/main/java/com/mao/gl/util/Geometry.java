@@ -39,7 +39,7 @@ public class Geometry {
         public float radius;
         public float height;
 
-        public Cylinder(Point center, float height, float radius) {
+        public Cylinder(Point center, float radius, float height) {
             this.center = center;
             this.height = height;
             this.radius = radius;

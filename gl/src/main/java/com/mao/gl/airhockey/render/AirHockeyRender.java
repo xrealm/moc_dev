@@ -7,6 +7,7 @@ import android.opengl.Matrix;
 
 import com.mao.gl.R;
 import com.mao.gl.airhockey.model.Mallet;
+import com.mao.gl.airhockey.model.Puck;
 import com.mao.gl.airhockey.model.Table;
 import com.mao.gl.airhockey.program.ColorShaderProgram;
 import com.mao.gl.airhockey.program.TextureShaderProgram;
@@ -33,8 +34,14 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
     // 存储矩阵
     private final float[] projectionMatrix = new float[16];
     private final float[] modelMatrix = new float[16];
+
+    private final float[] viewMatrix = new float[16];
+    private final float[] viewProjectionMatrix = new float[16];
+    private final float[] modelViewProjectionMatrix = new float[16];
+
     private Table mTable;
     private Mallet mMallet;
+    private Puck mPuck;
 
     private TextureShaderProgram mTextureProgram;
     private ColorShaderProgram mColorProgram;
@@ -45,19 +52,15 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
     private static final String VERTEX_SHADER =
             "uniform mat4 " + U_MATRIX + ";\n"
                     + "attribute vec4 a_Position;\n"
-                    + "attribute vec4 a_Color;\n"
-                    + "varying vec4 v_Color;\n"
                     + "void main() {\n"
-                    + "v_Color = a_Color;\n"
                     + "gl_Position = u_Matrix * a_Position;\n"
-                    + "gl_PointSize = 5.0;\n"
                     + "}";
 
     private static final String FRAGMENT_SHADER =
             "precision mediump float;\n"
-                    + "varying vec4 v_Color;\n"
+                    + "uniform vec4 u_Color;\n"
                     + "void main() {\n"
-                    + "gl_FragColor = v_Color;\n"
+                    + "gl_FragColor = u_Color;\n"
                     + "}";
 
     private static final String TEXTURE_VERTEX_SHADER =
@@ -94,8 +97,8 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         GLES20.glClearColor(0, 0, 0, 0);
         mTable = new Table();
-        mMallet = new Mallet();
-
+        mMallet = new Mallet(0.08f, 0.15f, 32);
+        mPuck = new Puck(0.06f, 0.02f, 32);
         mTextureProgram = new TextureShaderProgram(TEXTURE_VERTEX_SHADER, TEXTURE_FRAGMENT_SHADER);
         mColorProgram = new ColorShaderProgram(VERTEX_SHADER, FRAGMENT_SHADER);
 
@@ -117,18 +120,20 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
 
         //使用投影矩阵
         Matrix.perspectiveM(projectionMatrix, 0, 45, (float) width / (float) height, 1f, 10f);
-        //模型矩阵设为单位矩阵
-        Matrix.setIdentityM(modelMatrix, 0);
-        // 沿z轴平移 -2
-        // z平移
-        Matrix.translateM(modelMatrix, 0, 0, 0, -2.5f);
-        // 旋转-60
-        Matrix.rotateM(modelMatrix, 0, -60f, 1f, 0, 0);
-        // 投影矩阵和模型矩阵相乘
-        float[] temp = new float[16];
-        Matrix.multiplyMM(temp, 0, projectionMatrix, 0, modelMatrix, 0);
-        //结果放回投影矩阵
-        System.arraycopy(temp, 0, projectionMatrix, 0, temp.length);
+        //设置视口，眼睛的位置
+        Matrix.setLookAtM(viewMatrix, 0, 0, 1.2f, 2.2f, 0, 0, 0, 0, 1f, 0);
+//        //模型矩阵设为单位矩阵
+//        Matrix.setIdentityM(modelMatrix, 0);
+//        // 沿z轴平移 -2
+//        // z平移
+//        Matrix.translateM(modelMatrix, 0, 0, 0, -2.5f);
+//        // 旋转-60
+//        Matrix.rotateM(modelMatrix, 0, -60f, 1f, 0, 0);
+//        // 投影矩阵和模型矩阵相乘
+//        float[] temp = new float[16];
+//        Matrix.multiplyMM(temp, 0, projectionMatrix, 0, modelMatrix, 0);
+//        //结果放回投影矩阵
+//        System.arraycopy(temp, 0, projectionMatrix, 0, temp.length);
     }
 
     @Override
@@ -136,17 +141,41 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
         // 清空屏幕
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
-        // draw table
+        Matrix.multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
+
+        positionTableInScene();
         mTextureProgram.useProgram();
-        // uniform
-        mTextureProgram.setUniforms(projectionMatrix, mTexture);
+        mTextureProgram.setUniforms(modelViewProjectionMatrix, mTexture);
         mTable.bindData(mTextureProgram);
         mTable.draw();
 
-        //draw the mallets
+        positionObjectInScene(0f, mMallet.height / 2f, -0.4f);
         mColorProgram.useProgram();
-        mColorProgram.setUniforms(projectionMatrix);
+        mColorProgram.setUniforms(modelViewProjectionMatrix, 1f, 0, 0);
         mMallet.bindData(mColorProgram);
         mMallet.draw();
+
+        positionObjectInScene(0f, mMallet.height / 2f, 0.4f);
+        mColorProgram.setUniforms(modelViewProjectionMatrix, 0, 0, 1f);
+        mMallet.draw();
+
+        //puck
+        positionObjectInScene(0f, mMallet.height / 2f, 0);
+        mColorProgram.setUniforms(modelViewProjectionMatrix, 0.8f, 0.8f, 1f);
+        mPuck.bindData(mColorProgram);
+        mPuck.draw();
+    }
+
+    //更新table模型矩阵
+    private void positionTableInScene() {
+        Matrix.setIdentityM(modelMatrix, 0);
+        Matrix.rotateM(modelMatrix, 0, -90f, 1f, 0, 0);
+        Matrix.multiplyMM(modelViewProjectionMatrix, 0, viewProjectionMatrix, 0, modelMatrix, 0);
+    }
+
+    private void positionObjectInScene(float x, float y, float z) {
+        Matrix.setIdentityM(modelMatrix, 0);
+        Matrix.translateM(modelMatrix, 0, x, y, z);
+        Matrix.multiplyMM(modelViewProjectionMatrix, 0, viewProjectionMatrix, 0, modelMatrix, 0);
     }
 }
