@@ -1,5 +1,7 @@
 package com.mao.dev.url;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -8,12 +10,18 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.mao.dev.R;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static android.R.attr.x;
 
 /**
  * Created by Mao on 16/10/8.
@@ -22,6 +30,7 @@ import java.util.regex.Pattern;
 public class UrlActivity extends AppCompatActivity {
 
     TextView mTextView;
+    PopupWindow mPopupWindow;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,6 +48,26 @@ public class UrlActivity extends AppCompatActivity {
             mTextView.setMovementMethod(LinkMovementMethod.getInstance());
         }
         mTextView.setText(ss);
+
+        mTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mPopupWindow == null) {
+                    TextView textView = new TextView(UrlActivity.this);
+                    textView.setBackgroundColor(Color.GRAY);
+                    textView.setText("托尔斯泰");
+                    mPopupWindow = new PopupWindow(textView, ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+                    mPopupWindow.setBackgroundDrawable(new ColorDrawable(0));
+                    mPopupWindow.setTouchable(true);
+                    mPopupWindow.setOutsideTouchable(true);
+                }
+                if (mPopupWindow.getContentView().getMeasuredWidth() == 0) {
+                    mPopupWindow.getContentView().measure(0, 0);
+                }
+                mPopupWindow.showAsDropDown(mTextView, mTextView.getWidth() / 2 - mPopupWindow.getContentView().getMeasuredWidth() / 2, -mTextView.getHeight() - mPopupWindow.getContentView().getMeasuredHeight());
+            }
+        });
     }
 
     private String getUrl(String content) {
