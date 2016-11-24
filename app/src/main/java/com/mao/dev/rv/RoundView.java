@@ -3,9 +3,12 @@ package com.mao.dev.rv;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.mao.dev.AppKit;
 
 /**
  * Created by Mao on 2016/11/18.
@@ -14,6 +17,7 @@ import android.view.View;
 public class RoundView extends View {
     private Paint mPaint;
 
+    private String text = "哈尼打法的基发来看打飞机";
     public RoundView(Context context) {
         super(context);
     }
@@ -27,11 +31,19 @@ public class RoundView extends View {
         super(context, attrs, defStyleAttr);
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        Rect rect = new Rect();
+        mPaint.getTextBounds(text,0,text.length(),rect);
+        setMeasuredDimension((int) (mPaint.measureText(text) + AppKit.dp2px(8)), rect.height()+AppKit.dp2px(2));
+    }
+
     private void init() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setColor(0xbfffffff);
         mPaint.setTextAlign(Paint.Align.CENTER);
-        mPaint.setTextSize(44);
+        mPaint.setTextSize(AppKit.dp2px(10));
     }
 
     @Override
@@ -44,6 +56,7 @@ public class RoundView extends View {
         mPaint.setColor(0xff171717);
         Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
         float baseline = getHeight() / 2 - fontMetrics.top / 2 - fontMetrics.bottom / 2;
-        canvas.drawText("哈尼直播", getWidth() / 2, baseline, mPaint);
+        canvas.drawText(text, getWidth() / 2, baseline, mPaint);
     }
+
 }
