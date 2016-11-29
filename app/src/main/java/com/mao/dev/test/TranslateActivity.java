@@ -9,11 +9,14 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
 import android.icu.text.MessagePattern;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
+import com.mao.dev.AppKit;
 import com.mao.dev.R;
 
 /**
@@ -26,6 +29,7 @@ public class TranslateActivity extends AppCompatActivity {
     int translateX;
     int translateY;
 
+    TextView tvSticker1, tvSticker2, tvSticker3;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,25 +39,54 @@ public class TranslateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        drawBitmap();
-                    }
-                }).start();
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        drawBitmap();
+//                    }
+//                }).start();
+//
+//                if (translateX <= 200) {
+//                    translateX += 20;
+//                    translateY += 20;
+//                } else {
+//                    translateX -= 20;
+//                    translateY -= 20;
+//                }
+//                mView.setTranslationX(translateX);
+//                mView.setTranslationY(translateY);
+//                Log.d("mpg", "x=" + translateX + ",y=" + translateY);
 
-                if (translateX <= 200) {
-                    translateX += 20;
-                    translateY += 20;
-                } else {
-                    translateX -= 20;
-                    translateY -= 20;
-                }
-                mView.setTranslationX(translateX);
-                mView.setTranslationY(translateY);
-                Log.d("mpg", "x=" + translateX + ",y=" + translateY);
+                getNinePatch();
             }
         });
+
+        tvSticker1 = (TextView) findViewById(R.id.tv_sticker1);
+        tvSticker2 = (TextView) findViewById(R.id.tv_sticker2);
+        tvSticker3 = (TextView) findViewById(R.id.tv_sticker3);
+
+        getNinePatch();
+    }
+
+    private void getNinePatch() {
+
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ninepatch";
+        Bitmap bitmap = AppKit.decodeBitmapByStream(path + "/live_textstickers_elephant.9.png");
+        NinePatchDrawable ninePatch = AppKit.getNinePatchDrawableFromCache(bitmap);
+        if (ninePatch != null) {
+            tvSticker1.setBackgroundDrawable(ninePatch);
+        }
+        bitmap = AppKit.decodeBitmapByStream(path + "/live_textstickers_chicken.9.png");
+        ninePatch = AppKit.getNinePatchDrawableFromCache(bitmap);
+        if (ninePatch != null) {
+            tvSticker2.setBackgroundDrawable(ninePatch);
+        }
+
+        bitmap = AppKit.decodeBitmapByStream(path + "/live_textstickers_wing.9.png");
+        ninePatch = AppKit.getNinePatchDrawableFromCache(bitmap);
+        if (ninePatch != null) {
+            tvSticker3.setBackgroundDrawable(ninePatch);
+        }
     }
 
     private void drawBitmap() {
