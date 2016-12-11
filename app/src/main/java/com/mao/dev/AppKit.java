@@ -82,4 +82,17 @@ public class AppKit {
     public static Bitmap decodeFile(String path) {
         return BitmapFactory.decodeFile(path);
     }
+
+    public static Context getContext() {
+        return mContext;
+    }
+
+    public static int getScreenWidth() {
+        return getResources().getDisplayMetrics().widthPixels;
+    }
+
+    public static int getScreenHeight() {
+        return getResources().getDisplayMetrics().heightPixels;
+    }
+
 }
