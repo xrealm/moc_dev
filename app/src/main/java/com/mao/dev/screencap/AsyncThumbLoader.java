@@ -20,7 +20,6 @@ public class AsyncThumbLoader {
     private static AsyncThumbLoader mThumbLoader;
 
     public static AsyncThumbLoader getInstance() {
-        //不加synchronized了
         if (mThumbLoader == null) {
             mThumbLoader = new AsyncThumbLoader();
         }
