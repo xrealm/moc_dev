@@ -1,4 +1,4 @@
-package com.mao.dev.vb;
+package com.mao.dev.ui.vb;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

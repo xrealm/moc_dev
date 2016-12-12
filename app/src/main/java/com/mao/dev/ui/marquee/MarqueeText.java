@@ -1,4 +1,4 @@
-package com.mao.dev.marquee;
+package com.mao.dev.ui.marquee;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

@@ -1,4 +1,4 @@
-package com.mao.dev.screencap;
+package com.mao.dev.ui.screencap;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

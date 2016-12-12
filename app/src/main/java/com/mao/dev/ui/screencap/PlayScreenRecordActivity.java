@@ -1,4 +1,4 @@
-package com.mao.dev.screencap;
+package com.mao.dev.ui.screencap;
 
 import android.content.Context;
 import android.content.Intent;

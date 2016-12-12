@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.mao.dev.autosize.AutoSizeEditText
+        <com.mao.dev.ui.autosize.AutoSizeEditText
             android:id="@+id/tv_autosize"
             android:textSize="17sp"
             android:layout_width="200dp"

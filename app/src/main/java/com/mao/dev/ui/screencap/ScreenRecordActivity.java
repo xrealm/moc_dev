@@ -1,4 +1,4 @@
-package com.mao.dev.screencap;
+package com.mao.dev.ui.screencap;
 
 import android.app.LoaderManager;
 import android.content.Loader;
@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 
 import com.mao.dev.R;
 

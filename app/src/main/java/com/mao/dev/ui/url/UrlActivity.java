@@ -1,4 +1,4 @@
-package com.mao.dev.url;
+package com.mao.dev.ui.url;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -10,7 +10,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
@@ -20,8 +19,6 @@ import com.mao.dev.R;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static android.R.attr.x;
 
 /**
  * Created by Mao on 16/10/8.

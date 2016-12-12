@@ -1,4 +1,4 @@
-package com.mao.dev.marquee;
+package com.mao.dev.ui.marquee;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

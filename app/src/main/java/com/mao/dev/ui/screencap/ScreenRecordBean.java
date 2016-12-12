@@ -1,4 +1,4 @@
-package com.mao.dev.screencap;
+package com.mao.dev.ui.screencap;
 
 /**
  * Created by Mao on 2016/12/6.

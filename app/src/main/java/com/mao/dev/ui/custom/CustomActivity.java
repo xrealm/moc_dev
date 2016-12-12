@@ -1,4 +1,4 @@
-package com.mao.dev.custom;
+package com.mao.dev.ui.custom;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

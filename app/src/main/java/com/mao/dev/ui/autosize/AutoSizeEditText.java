@@ -1,4 +1,4 @@
-package com.mao.dev.autosize;
+package com.mao.dev.ui.autosize;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

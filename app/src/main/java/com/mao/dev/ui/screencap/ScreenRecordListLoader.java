@@ -1,4 +1,4 @@
-package com.mao.dev.screencap;
+package com.mao.dev.ui.screencap;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;

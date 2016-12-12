@@ -1,8 +1,7 @@
-package com.mao.dev.url;
+package com.mao.dev.ui.url;
 
 import android.os.Parcel;
 import android.text.TextPaint;
-import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.view.View;
 import android.widget.Toast;

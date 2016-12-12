@@ -1,4 +1,4 @@
-package com.mao.dev.rv;
+package com.mao.dev.ui.rv;
 
 import android.content.Context;
 import android.os.Build;

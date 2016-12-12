@@ -1,4 +1,4 @@
-package com.mao.dev.autosize;
+package com.mao.dev.ui.autosize;
 
 import android.content.Context;
 import android.graphics.Rect;

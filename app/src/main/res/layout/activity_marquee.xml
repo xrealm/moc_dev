@@ -5,7 +5,7 @@
               android:orientation="vertical"
               android:padding="16dp">
 
-    <com.mao.dev.marquee.MarqueeText
+    <com.mao.dev.ui.marquee.MarqueeText
         android:id="@+id/marquee_text"
         android:layout_width="230dp"
         android:layout_height="wrap_content"

@@ -4,14 +4,14 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <com.mao.dev.custom.ClipLayout
+    <com.mao.dev.ui.custom.ClipLayout
         android:layout_width="80dp"
         android:layout_height="80dp">
 
-        <com.mao.dev.custom.ClipView
+        <com.mao.dev.ui.custom.ClipView
             android:id="@+id/clipview"
             android:layout_width="80dp"
             android:layout_height="80dp"/>
-    </com.mao.dev.custom.ClipLayout>
+    </com.mao.dev.ui.custom.ClipLayout>
 
 </LinearLayout>
