@@ -3,6 +3,7 @@ package com.mao.dev.ui.screencap;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -51,6 +52,58 @@ public class PlayScreenRecordActivity extends AppCompatActivity {
         params.width = AppKit.getScreenWidth();
         params.height = AppKit.getScreenHeight();
         mVideoView.setLayoutParams(params);
+
+        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                //seek to 不准确 start
+                mp.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
+                    @Override
+                    public void onSeekComplete(MediaPlayer mp) {
+                        mVideoView.start();
+                    }
+                });
+                // seek to 不准确 start
+
+                //居中裁切
+                int videoWidth = mp.getVideoWidth();
+                int videoHeight = mp.getVideoHeight();
+                int screenWidth = AppKit.getScreenWidth();
+                int screenHeight = AppKit.getScreenHeight();
+                if (videoWidth == 0 || videoHeight == 0) {
+                    return;
+                }
+                float scale = videoWidth / (float) videoHeight;
+                int width = screenWidth;
+                int height = (int) (width / scale);
+                mVideoView.getHolder().setFixedSize(width, height);
+            }
+
+        });
+    }
+
+    private Matrix mMatrix;
+    private void fixSize(int videoWidth, int videoHeight) {
+        if (videoWidth == 0 || videoHeight == 0) {
+            return;
+        }
+        int screenWidth = AppKit.getScreenWidth();
+        int screenHeight = AppKit.getScreenHeight();
+
+        float sx = videoWidth / (float) screenWidth;
+        float sy = videoHeight / (float) screenHeight;
+        float sclae = Math.max(sx, sy);
+        if (mMatrix == null) {
+            mMatrix = new Matrix();
+        }
+        mMatrix.reset();
+        //移动视频
+        int x = (screenWidth - videoWidth) / 2;
+        int y = (screenHeight - videoHeight) / 2;
+        mMatrix.preTranslate(x, y);
+        mMatrix.postScale(sx, sy);
+        mMatrix.postScale(1 / sx, 1 / sy, screenWidth / 2, screenHeight / 2);
+
     }
 
     private void initData() {
