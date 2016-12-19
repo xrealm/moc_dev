@@ -7,6 +7,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -61,6 +62,7 @@ public class ScreenRecordListLoader extends AsyncTaskLoader<List<ScreenRecordBea
                 list.add(bean);
             }
         }
+        Collections.sort(list);
         return list;
     }
 }
