@@ -6,8 +6,6 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.VideoView;
 
-import com.mao.dev.AppKit;
-
 /**
  * Created by Mao on 2016/12/15.
  */
