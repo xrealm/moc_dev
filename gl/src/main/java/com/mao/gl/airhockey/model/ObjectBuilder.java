@@ -85,7 +85,7 @@ public class ObjectBuilder {
 
         //构造三角形点
         for (int i = 0; i < numPoints; i++) {
-            float angleInRadius = ((float) i / (float) numPoints * ((float) Math.PI * 2f));
+            float angleInRadius = (float) i / (float) numPoints * ((float) Math.PI * 2f);
 
             vertexData[offset++] = circle.center.x + circle.radius * (float) Math.cos(angleInRadius);
             vertexData[offset++] = circle.center.y;

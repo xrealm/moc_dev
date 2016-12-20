@@ -4,7 +4,7 @@ package com.mao.dev.ui.screencap;
  * Created by Mao on 2016/12/6.
  */
 
-public class ScreenRecordBean {
+public class ScreenRecordBean implements Comparable<ScreenRecordBean> {
 
     public String path;
     public String thumbPath;
@@ -17,5 +17,10 @@ public class ScreenRecordBean {
         this.path = path;
         this.thumbPath = thumbPath;
         this.timestamp = timestamp;
+    }
+
+    @Override
+    public int compareTo(ScreenRecordBean o) {
+        return (int) (o.timestamp - this.timestamp);
     }
 }

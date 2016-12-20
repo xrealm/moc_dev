@@ -12,6 +12,7 @@ import com.mao.gl.airhockey.model.Table;
 import com.mao.gl.airhockey.program.ColorShaderProgram;
 import com.mao.gl.airhockey.program.TextureShaderProgram;
 import com.mao.gl.airhockey.util.TextureHelper;
+import com.mao.gl.util.Geometry;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -41,6 +42,9 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
     private ColorShaderProgram mColorProgram;
     private int mTexture;
     private Context mContext;
+
+    private boolean malletPressed = false;
+    private Geometry.Point blueMalletPosition;
 
     // varying 混合
     private static final String VERTEX_SHADER =
@@ -97,6 +101,8 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
         mColorProgram = new ColorShaderProgram(VERTEX_SHADER, FRAGMENT_SHADER);
 
         mTexture = TextureHelper.loadTexture(mContext, R.mipmap.air_hockey_surface);
+
+        blueMalletPosition = new Geometry.Point(0, mMallet.height / 2f, 0.4f);
     }
 
     @Override
@@ -159,5 +165,19 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
         Matrix.setIdentityM(modelMatrix, 0);
         Matrix.translateM(modelMatrix, 0, x, y, z);
         Matrix.multiplyMM(modelViewProjectionMatrix, 0, viewProjectionMatrix, 0, modelMatrix, 0);
+    }
+
+    public void handleTouchDrag(float nomalizedX, float nomalizedY) {
+
+    }
+
+    public void handleTouchPress(float nomalizedX, float nomalizedY) {
+        convertNomalized2DPointToRay(nomalizedX, nomalizedY);
+
+        
+    }
+
+    private void convertNomalized2DPointToRay(float nomalizedX, float nomalizedY) {
+
     }
 }
