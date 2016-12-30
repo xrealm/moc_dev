@@ -29,4 +29,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.2.1'
     compile "me.henrytao:smooth-app-bar-layout:24.1.0.0"
     compile 'com.google.zxing:core:3.2.1'
+    compile 'com.facebook.fbui.textlayoutbuilder:textlayoutbuilder:1.0.0'
 }
