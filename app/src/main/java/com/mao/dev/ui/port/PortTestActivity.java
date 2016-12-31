@@ -15,8 +15,13 @@ import com.mao.dev.R;
 
 import java.io.IOException;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
 import java.net.Socket;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.channels.DatagramChannel;
 
 /**
@@ -40,10 +45,25 @@ public class PortTestActivity extends AppCompatActivity {
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findPort();
+//                findPort();
 //                ping("192.167.1.100");
+                parseHost();
             }
         });
+    }
+
+    private void parseHost() {
+        String hostIp = AppKit.getHostIp();
+        String text = hostIp + ":8888";
+        InetSocketAddress address = new InetSocketAddress(hostIp, 8888);
+        try {
+            URL url = new URL(text);
+            Log.d("mao", "host=" + url.getHost());
+            Log.d("mao", "port=" + url.getPort());
+
+        }catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

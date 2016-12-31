@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +39,29 @@ public class UrlActivity extends AppCompatActivity {
 
         mTextView = (TextView) findViewById(R.id.tv_text);
 
+//        test1();
+
+        test2();
+    }
+
+    private void test2() {
+        SpannableStringBuilder ssb = new SpannableStringBuilder("使用手机直播，和身边另一台手机、电脑、无人机、手持摄像机连接，进行双镜头直播。");
+        String highLightText = "了解更多";
+        int start = ssb.length();
+        ssb.append(highLightText);
+        ssb.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)),
+                start, start + highLightText.length(), SpannableString.SPAN_INCLUSIVE_EXCLUSIVE);
+        ssb.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                Log.d("mao", "clickclick");
+            }
+        }, start, start + highLightText.length(), SpannableString.SPAN_INCLUSIVE_EXCLUSIVE);
+        mTextView.setText(ssb);
+        mTextView.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    private void test1() {
         String content = "测试测试https://www.google.com测试测试";
         SpannableString ss = new SpannableString(content);
         String url = getUrl(content);
