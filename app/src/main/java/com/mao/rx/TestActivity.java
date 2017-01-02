@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.mao.dev.R;
 import com.orhanobut.logger.Logger;
@@ -38,13 +39,43 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rx_test);
 
+        initView();
 //        test();
 //        testZip();
-        flowabledemo1();
+//        flowabledemo1();
+        flowabledemo2();
     }
 
-    private void flowabledemo1() {
-        Flowable<Integer> upStream = Flowable.create(new FlowableOnSubscribe<Integer>() {
+    private void initView() {
+        findViewById(R.id.btn_start).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                flowabledemo2();
+            }
+        });
+
+        findViewById(R.id.btn_request).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                request(2);
+            }
+        });
+    }
+
+    private void request(int amount) {
+        mSubscription.request(amount);
+    }
+
+    private void flowabledemo2() {
+        Flowable.create(createFlowableOnSubscribe(), BackpressureStrategy.ERROR)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(createSubscriber());
+    }
+
+    private FlowableOnSubscribe<Integer> createFlowableOnSubscribe() {
+        return new FlowableOnSubscribe<Integer>() {
+
             @Override
             public void subscribe(FlowableEmitter<Integer> e) throws Exception {
                 Logger.d("emit 1");
@@ -56,14 +87,18 @@ public class TestActivity extends AppCompatActivity {
                 Logger.d("emit complete");
                 e.onComplete();
             }
-        }, BackpressureStrategy.ERROR);
+        };
+    }
 
-        Subscriber<Integer> downStream = new Subscriber<Integer>() {
+    private Subscription mSubscription;
+
+    private Subscriber<Integer> createSubscriber() {
+        return new Subscriber<Integer>() {
 
             @Override
             public void onSubscribe(Subscription s) {
                 Logger.d("onSubscribe");
-                s.request(2);
+                mSubscription = s;
             }
 
             @Override
@@ -81,6 +116,12 @@ public class TestActivity extends AppCompatActivity {
                 Logger.d("onComplete");
             }
         };
+    }
+
+    private void flowabledemo1() {
+        Flowable<Integer> upStream = Flowable.create(createFlowableOnSubscribe(), BackpressureStrategy.ERROR);
+
+        Subscriber<Integer> downStream = createSubscriber();
         upStream.subscribe(downStream);
     }
 
