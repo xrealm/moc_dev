@@ -43,21 +43,21 @@ public class TestActivity extends AppCompatActivity {
 //        test();
 //        testZip();
 //        flowabledemo1();
-        flowabledemo2();
+//        flowabledemo2();
     }
 
     private void initView() {
         findViewById(R.id.btn_start).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                flowabledemo2();
+                flowabledemo4();
             }
         });
 
         findViewById(R.id.btn_request).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                request(2);
+                request(128);
             }
         });
     }
@@ -65,6 +65,35 @@ public class TestActivity extends AppCompatActivity {
     private void request(int amount) {
         mSubscription.request(amount);
     }
+
+    private void flowabledemo4() {
+        Flowable.create(createFlowableOnSubscribe3(), BackpressureStrategy.LATEST)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(createSubscriber());
+    }
+
+    private void flowabledemo3() {
+        Flowable.create(createFlowableOnSubscribe3(), BackpressureStrategy.DROP)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(createSubscriber());
+    }
+
+    private FlowableOnSubscribe<Integer> createFlowableOnSubscribe3() {
+        return new FlowableOnSubscribe<Integer>() {
+
+            @Override
+            public void subscribe(FlowableEmitter<Integer> e) throws Exception {
+                for (int i = 0; i < 1000; i++) {
+                    e.onNext(i);
+                }
+                Logger.d("emit complete");
+                e.onComplete();
+            }
+        };
+    }
+
 
     private void flowabledemo2() {
         Flowable.create(createFlowableOnSubscribe(), BackpressureStrategy.ERROR)
@@ -99,6 +128,7 @@ public class TestActivity extends AppCompatActivity {
             public void onSubscribe(Subscription s) {
                 Logger.d("onSubscribe");
                 mSubscription = s;
+                s.request(128);
             }
 
             @Override
