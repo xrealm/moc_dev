@@ -16,7 +16,7 @@ public class AppApplication extends Application {
         AppKit.setApplication(this);
 
         Logger.init("mao")
-                .methodCount(1)
+                .methodCount(0)
                 .methodOffset(0);
 
     }
