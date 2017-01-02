@@ -8,8 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import com.mao.dev.R;
 import com.orhanobut.logger.Logger;
 
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
+
 import java.util.ArrayList;
 
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -32,7 +39,49 @@ public class TestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rx_test);
 
 //        test();
-        testZip();
+//        testZip();
+        flowabledemo1();
+    }
+
+    private void flowabledemo1() {
+        Flowable<Integer> upStream = Flowable.create(new FlowableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(FlowableEmitter<Integer> e) throws Exception {
+                Logger.d("emit 1");
+                e.onNext(1);
+                Logger.d("emit 2");
+                e.onNext(2);
+                Logger.d("emit 3");
+                e.onNext(3);
+                Logger.d("emit complete");
+                e.onComplete();
+            }
+        }, BackpressureStrategy.ERROR);
+
+        Subscriber<Integer> downStream = new Subscriber<Integer>() {
+
+            @Override
+            public void onSubscribe(Subscription s) {
+                Logger.d("onSubscribe");
+                s.request(2);
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Logger.d("onNext" + integer);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                Logger.d("onError", t);
+            }
+
+            @Override
+            public void onComplete() {
+                Logger.d("onComplete");
+            }
+        };
+        upStream.subscribe(downStream);
     }
 
     private void testZip() {
