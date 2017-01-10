@@ -3,9 +3,12 @@ package com.mao.rx;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mao.dev.R;
 import com.orhanobut.logger.Logger;
 
@@ -13,6 +16,8 @@ import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -50,7 +55,8 @@ public class TestActivity extends AppCompatActivity {
         findViewById(R.id.btn_start).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                flowabledemo4();
+//                flowabledemo4();
+                testGson();
             }
         });
 
@@ -60,6 +66,21 @@ public class TestActivity extends AppCompatActivity {
                 request(128);
             }
         });
+    }
+
+    private void testGson() {
+        String extension = "{\\\"filterid\\\":\\\"自然清新\\\",\\\"filtertype\\\":\\\"自然清新\\\",\\\"filtertest\\\":\\\"自然清新\\\"}";
+        Map<String, String> map = new HashMap<>();
+        map.put("filter_id", "ziran");
+        map.put("filtertype", "xiaoziran");
+        map.put("filtertest", "daziran");
+
+        Gson gson = new Gson();
+        String json = gson.toJson(map);
+        Logger.d(json);
+
+        Object o = gson.fromJson(json, new TypeToken<Map<String, String>>() {}.getType());
+        Logger.d(o);
     }
 
     private void request(int amount) {
@@ -97,9 +118,9 @@ public class TestActivity extends AppCompatActivity {
 
     private void flowabledemo2() {
         Flowable.create(createFlowableOnSubscribe(), BackpressureStrategy.ERROR)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(createSubscriber());
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(createSubscriber());
     }
 
     private FlowableOnSubscribe<Integer> createFlowableOnSubscribe() {
