@@ -56,7 +56,7 @@ public class TestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                flowabledemo4();
-                testGson();
+                flowabledemo5();
             }
         });
 
@@ -66,6 +66,48 @@ public class TestActivity extends AppCompatActivity {
                 request(128);
             }
         });
+    }
+
+    private void flowabledemo5() {
+        Flowable.create(new FlowableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(FlowableEmitter<Integer> e) throws Exception {
+                Logger.d("emit 1");
+                e.onNext(1);
+                Logger.d("emit 2");
+                e.onNext(2);
+                Logger.d("emit 3");
+                e.onNext(3);
+                Logger.d("emit complete");
+                e.onComplete();
+            }
+        }, BackpressureStrategy.ERROR)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Integer>() {
+                    @Override
+                    public void onSubscribe(Subscription s) {
+                        Logger.d("onSubscribe");
+                        mSubscription = s;
+                        s.request(1);
+                    }
+
+                    @Override
+                    public void onNext(Integer integer) {
+                        Logger.d("onNext " + integer);
+                        mSubscription.request(1);
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        Logger.d("onError");
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Logger.d("onComplete");
+                    }
+                });
     }
 
     private void testGson() {
@@ -79,7 +121,8 @@ public class TestActivity extends AppCompatActivity {
         String json = gson.toJson(map);
         Logger.d(json);
 
-        Object o = gson.fromJson(json, new TypeToken<Map<String, String>>() {}.getType());
+        Object o = gson.fromJson(json, new TypeToken<Map<String, String>>() {
+        }.getType());
         Logger.d(o);
     }
 
