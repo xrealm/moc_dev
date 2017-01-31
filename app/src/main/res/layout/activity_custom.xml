@@ -4,6 +4,23 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <FrameLayout
+        android:id="@+id/fl_circle"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/hani_bg_delete_sticker"
+        />
+
+    <com.mao.dev.ui.custom.HalfCircleView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        />
+
     <com.mao.dev.ui.custom.ClipLayout
         android:layout_width="80dp"
         android:layout_height="80dp">

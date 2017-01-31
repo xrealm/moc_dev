@@ -16,5 +16,7 @@ public class CustomActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom);
+
+        findViewById(R.id.fl_circle).getBackground().setLevel(5000);
     }
 }
