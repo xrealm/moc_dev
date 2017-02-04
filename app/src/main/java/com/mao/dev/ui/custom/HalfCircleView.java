@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -18,8 +19,7 @@ import com.mao.dev.R;
 public class HalfCircleView extends View {
 
     private Paint mShadowPaint;
-    private int mRadius;
-    private int mCenterY;
+    private Path mCirclePath;
 
     public HalfCircleView(Context context) {
         super(context);
@@ -47,25 +47,27 @@ public class HalfCircleView extends View {
         mShadowPaint.setAntiAlias(true);
         mShadowPaint.setColor(getResources().getColor(R.color.hani_c12));
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        mCirclePath = new Path();
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mRadius = w / 2 - dp2px(20);
-        mCenterY = dp2px(60) - mRadius;
+        int radius = w / 2 - dp2px(20);
+        int centerY = dp2px(60) - radius;
+        mCirclePath.addCircle(w / 2, centerY, radius, Path.Direction.CW);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.save();
-        mShadowPaint.setShadowLayer(dp2px(20), 0, dp2px(10), getResources().getColor(R.color.colorAccent));
-        canvas.drawCircle(getWidth() / 2, mCenterY, mRadius, mShadowPaint);
+        mShadowPaint.setShadowLayer(dp2px(10), 0, dp2px(2.5f), getResources().getColor(R.color.colorAccent));
+        canvas.drawPath(mCirclePath, mShadowPaint);
         canvas.restore();
     }
 
-    private int dp2px(int dp) {
+    private int dp2px(float dp) {
         return (int) (getResources().getDisplayMetrics().density * dp);
     }
 }
