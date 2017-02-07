@@ -32,6 +32,7 @@
     </com.mao.dev.ui.custom.ClipLayout>
 
     <com.mao.dev.ui.custom.EdgeTransparentView
+        android:layout_marginLeft="20dp"
         android:layout_width="200dp"
         android:layout_height="250dp">
 
