@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mao.dev.AppKit;
@@ -30,6 +31,8 @@ public class TranslateActivity extends AppCompatActivity {
     int translateY;
 
     TextView tvSticker1, tvSticker2, tvSticker3;
+    ImageView ivSticker1, ivSticker2, ivSticker3, ivSticker4;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +67,11 @@ public class TranslateActivity extends AppCompatActivity {
         tvSticker1 = (TextView) findViewById(R.id.tv_sticker1);
         tvSticker2 = (TextView) findViewById(R.id.tv_sticker2);
         tvSticker3 = (TextView) findViewById(R.id.tv_sticker3);
+        ivSticker1 = (ImageView) findViewById(R.id.iv_sticker1);
+        ivSticker2 = (ImageView) findViewById(R.id.iv_sticker2);
+        ivSticker3 = (ImageView) findViewById(R.id.iv_sticker3);
+        ivSticker4
+                = (ImageView) findViewById(R.id.iv_sticker4);
 
         getNinePatch();
     }
@@ -82,10 +90,45 @@ public class TranslateActivity extends AppCompatActivity {
             tvSticker2.setBackgroundDrawable(ninePatch);
         }
 
-        bitmap = AppKit.decodeBitmapByStream(path + "/live_textstickers_wing.9.png");
+        bitmap = AppKit.readBitmapFromAsset2("textsticker_banana.zip");
+        NinePatchDrawable ninePatchDrawable = AppKit.getNinePatchDrawableFromCache(bitmap);
+        tvSticker2.setBackgroundDrawable(ninePatchDrawable);
+
+        bitmap = AppKit.decodeBitmapByStream(path + "/good.png");
         ninePatch = AppKit.getNinePatchDrawableFromCache(bitmap);
         if (ninePatch != null) {
             tvSticker3.setBackgroundDrawable(ninePatch);
+        }
+//        bitmap = AppKit.readBitmapFromAsset("textsticker_banana.zip");
+        TextStickerUIHelper uiHelper = new TextStickerUIHelper();
+//        Bitmap banana = uiHelper.getTextStickerBitmap("扩大房间里卡代发快递费了肯德基发卡量", bitmap);
+//        if (banana != null) {
+//            ivSticker1.setImageBitmap(banana);
+//        }
+
+        bitmap = AppKit.readBitmapFromAsset2("textsticker_banana.zip");
+        Bitmap banana = uiHelper.getTextStickerBitmap("扩大房间里卡代发快递费了肯德基发卡量", bitmap);
+        ivSticker1.setImageBitmap(banana);
+
+        bitmap = AppKit.readBitmapFromAsset("textsticker_good.zip");
+        Bitmap good = uiHelper.getTextStickerBitmap("扩大房间里卡代发快递费了肯德基发卡量", bitmap);
+        if (good != null) {
+            ivSticker2.setImageBitmap(good);
+        }
+
+        bitmap = AppKit.readBitmapFromAsset("textsticker_bread.zip");
+        Bitmap bread = uiHelper.getTextStickerBitmap("扩大房间里卡代发快递费了肯德基发卡量", bitmap);
+        if (bread != null) {
+            ivSticker3.setImageBitmap(bread);
+        }
+
+        Drawable background = tvSticker1.getBackground();
+        Rect bounds = background.getBounds();
+
+        bitmap = AppKit.readBitmapFromAsset("textsticker_wing.zip");
+        Bitmap wing = uiHelper.getTextStickerBitmap("扩大房间里卡代发快递费了肯德基发卡量", bitmap);
+        if (wing != null) {
+            ivSticker4.setImageBitmap(wing);
         }
     }
 
