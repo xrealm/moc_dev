@@ -7,19 +7,20 @@ import android.graphics.BitmapFactory;
 import android.graphics.NinePatch;
 import android.graphics.Rect;
 import android.graphics.drawable.NinePatchDrawable;
-import android.media.MediaMetadataRetriever;
-import android.util.Log;
+import android.net.wifi.WifiManager;
+import android.text.TextUtils;
+
+import com.orhanobut.logger.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
-import java.net.Inet4Address;
+import java.lang.reflect.Method;
+import java.math.BigInteger;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.Enumeration;
+import java.nio.ByteOrder;
 
 /**
  * Created by Mao on 2016/11/18.
@@ -50,8 +51,6 @@ public class AppKit {
         if (ninePatchChunk) {
             Rect paddingRect = new Rect();
             readPaddingFromChunk(chunk, paddingRect);
-            paddingRect.top = dp2px(10);
-            paddingRect.bottom = dp2px(8);
             return new NinePatchDrawable(getResources(), bitmap, chunk, paddingRect, null);
         } else {
             return null;
@@ -105,25 +104,42 @@ public class AppKit {
 
     public static String getHostIp() {
 
+        String ipAddressString = "";
         try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
-                NetworkInterface networkInterface = en.nextElement();
-                for (Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses(); inetAddresses.hasMoreElements(); ) {
-                    InetAddress inetAddress = inetAddresses.nextElement();
-                    if (inetAddress instanceof Inet4Address && !inetAddress.isLoopbackAddress()) {
-                        Log.d("mao", "host=" + inetAddress.getHostAddress());
-                        return inetAddress.getHostAddress();
-                    }
-                }
+            WifiManager wifiManager = (WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
+            // Convert little-endian to big-endianif needed
+            if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN)) {
+                ipAddress = Integer.reverseBytes(ipAddress);
             }
-        } catch (SocketException e) {
+            byte[] ipByteArray = BigInteger.valueOf(ipAddress).toByteArray();
+            ipAddressString = InetAddress.getByAddress(ipByteArray).getHostAddress();
+        } catch (Exception e) {
             e.printStackTrace();
-            Log.e("mao", "SocketException in get Ip Adress");
         }
-        return "";
+        if (TextUtils.isEmpty(ipAddressString) && AppKit.isWifiApEnable()) {
+            /*
+            example:
+            https://github.com/CyanogenMod/android_frameworks_base/blob/cm-10.1/wifi/java/android/net/wifi/WifiStateMachine.java?source=c#L1299
+            */
+            ipAddressString = "192.168.43.1";
+
+        }
+        Logger.d("ipAddress:" + ipAddressString);
+        return ipAddressString;
     }
 
-    public static int getAvailablePort() {
-        return 0;
+    public static boolean isWifiApEnable() {
+        try {
+            WifiManager wifiManager = (WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            Method method = wifiManager.getClass().getMethod("isWifiApEnabled");
+            method.setAccessible(true);
+            boolean state = (Boolean) method.invoke(wifiManager);
+            Logger.d("wifi ap state:" + state);
+            return state;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
