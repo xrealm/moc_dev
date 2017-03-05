@@ -17,6 +17,8 @@ import com.mao.gl.util.Geometry;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import static com.mao.gl.util.Geometry.*;
+
 /**
  * Created by Mao on 16/10/10.
  */
@@ -33,6 +35,7 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
     private final float[] viewMatrix = new float[16];
     private final float[] viewProjectionMatrix = new float[16];
     private final float[] modelViewProjectionMatrix = new float[16];
+    private final float[] invertedViewProjectionMatrix = new float[16];//反转举证，用来取消矩阵和投影矩阵的效果
 
     private Table mTable;
     private Mallet mMallet;
@@ -44,7 +47,7 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
     private Context mContext;
 
     private boolean malletPressed = false;
-    private Geometry.Point blueMalletPosition;
+    private Point blueMalletPosition;
 
     // varying 混合
     private static final String VERTEX_SHADER =
@@ -102,7 +105,7 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
 
         mTexture = TextureHelper.loadTexture(mContext, R.mipmap.air_hockey_surface);
 
-        blueMalletPosition = new Geometry.Point(0, mMallet.height / 2f, 0.4f);
+        blueMalletPosition = new Point(0, mMallet.height / 2f, 0.4f);
     }
 
     @Override
@@ -130,6 +133,8 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
         Matrix.multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
+        //创建反转矩阵
+        Matrix.invertM(invertedViewProjectionMatrix, 0, viewProjectionMatrix, 0);
 
         positionTableInScene();
         mTextureProgram.useProgram();
@@ -143,7 +148,7 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
         mMallet.bindData(mColorProgram);
         mMallet.draw();
 
-        positionObjectInScene(0f, mMallet.height / 2f, 0.4f);
+        positionObjectInScene(blueMalletPosition.x, blueMalletPosition.y, blueMalletPosition.z);
         mColorProgram.setUniforms(modelViewProjectionMatrix, 0, 0, 1f);
         mMallet.draw();
 
@@ -168,16 +173,50 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
     }
 
     public void handleTouchDrag(float nomalizedX, float nomalizedY) {
-
+        if (malletPressed) {
+            Ray ray = convertNomalized2DPointToRay(nomalizedX, nomalizedY);
+            // Define a plane representing our air hockey table.
+            Plane plane = new Plane(new Point(0, 0, 0), new Vector(0, 1, 0));
+            // Find out where the touched point intersects the plane
+            // representing our table. We'll move the mallet along this plane.
+            Point touchedPoint = Geometry.intersectionPoint(ray, plane);
+            blueMalletPosition = new Point(touchedPoint.x, mMallet.height / 2f, touchedPoint.z);
+        }
     }
 
     public void handleTouchPress(float nomalizedX, float nomalizedY) {
-        convertNomalized2DPointToRay(nomalizedX, nomalizedY);
+        Ray ray = convertNomalized2DPointToRay(nomalizedX, nomalizedY);
 
-        
+        // Now test if this ray intersects with the mallet by creating a bounding sphere that wraps mallet.
+        Sphere malletBoundingSphere = new Sphere(new Point(blueMalletPosition.x,
+                blueMalletPosition.y,
+                blueMalletPosition.z), mMallet.height / 2.0f);
+
+        malletPressed = Geometry.intersects(malletBoundingSphere, ray);
     }
 
-    private void convertNomalized2DPointToRay(float nomalizedX, float nomalizedY) {
+    private Ray convertNomalized2DPointToRay(float nomalizedX, float nomalizedY) {
+        float[] nearPointNdc = {nomalizedX, nomalizedY, -1, 1};
+        float[] farPointNdc = {nomalizedX, nomalizedY, 1, 1};
 
+        float[] nearPointWorld = new float[4];
+        float[] farPointWorld = new float[4];
+
+        //得到near和far的世界空间坐标
+        Matrix.multiplyMV(nearPointWorld, 0, invertedViewProjectionMatrix, 0, nearPointNdc, 0);
+        Matrix.multiplyMV(farPointWorld, 0, invertedViewProjectionMatrix, 0, farPointNdc, 0);
+
+        divideByW(nearPointWorld);
+        divideByW(farPointWorld);
+
+        Point nearPointRay = new Point(nearPointWorld[0], nearPointWorld[1], nearPointWorld[2]);
+        Point farPointRay = new Point(farPointWorld[0], farPointWorld[1], farPointWorld[2]);
+        return new Ray(nearPointRay, Geometry.vectorBetween(nearPointRay, farPointRay));
+    }
+
+    private void divideByW(float[] vector) {
+        vector[0] /= vector[3];
+        vector[1] /= vector[3];
+        vector[2] /= vector[3];
     }
 }
