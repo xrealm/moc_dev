@@ -64,8 +64,10 @@ public class ShaderHelper {
 
     public static boolean validateProgram(int programId) {
         GLES20.glValidateProgram(programId);
-        int[] validaraStatus = new int[1];
-        GLES20.glGetProgramiv(programId, GLES20.GL_VALIDATE_STATUS, validaraStatus, 0);
-        return validaraStatus[0] != 0;
+        int[] validateStatus = new int[1];
+        GLES20.glGetProgramiv(programId, GLES20.GL_VALIDATE_STATUS, validateStatus, 0);
+        Logger.v("Results of validating program: " + validateStatus[0]
+                + "\nLog:" + GLES20.glGetProgramInfoLog(programId));
+        return validateStatus[0] != 0;
     }
 }

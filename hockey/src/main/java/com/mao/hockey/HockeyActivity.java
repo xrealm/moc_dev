@@ -18,6 +18,7 @@ public class HockeyActivity extends AppCompatActivity {
                 .methodOffset(1);
         setContentView(R.layout.activity_hockey);
         glSurfaceView = (GLSurfaceView) findViewById(R.id.gl_surfaceview);
+        glSurfaceView.setEGLContextClientVersion(2);
         glSurfaceView.setRenderer(new HockeyRender(this));
     }
 

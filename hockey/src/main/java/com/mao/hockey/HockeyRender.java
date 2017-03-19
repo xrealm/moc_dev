@@ -60,7 +60,7 @@ public class HockeyRender implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        GLES20.glClearColor(0, 0, 0, 0.5f);
+        GLES20.glClearColor(1.0f, 0, 0, 0.0f);
         String vertexShaderSource = OpenGLUtil.readShaderFromRaw(mContext, R.raw.simple_vertex_shader);
         String fragmentShaderSource = OpenGLUtil.readShaderFromRaw(mContext, R.raw.simple_fragment_shader);
         int vertexShader = ShaderHelper.compileVertexShader(vertexShaderSource);
@@ -93,14 +93,14 @@ public class HockeyRender implements GLSurfaceView.Renderer {
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
 
         //line
-        GLES20.glUniform4f(uColorLocation, 1, 0, 0, 1);
+        GLES20.glUniform4f(uColorLocation, 1f, 0, 0, 1f);
         GLES20.glDrawArrays(GLES20.GL_LINES, 6, 2);
 
         //mallet
-        GLES20.glUniform4f(uColorLocation, 0, 0, 1, 1);
+        GLES20.glUniform4f(uColorLocation, 0, 0, 1f, 1f);
         GLES20.glDrawArrays(GLES20.GL_POINTS, 8, 1);
 
-        GLES20.glUniform4f(uColorLocation, 1, 0, 0, 1);
+        GLES20.glUniform4f(uColorLocation, 1f, 0, 0, 1f);
         GLES20.glDrawArrays(GLES20.GL_POINTS, 9, 1);
     }
 }
