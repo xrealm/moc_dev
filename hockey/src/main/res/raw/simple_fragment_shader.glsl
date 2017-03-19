@@ -1,5 +1,6 @@
-precision mediump float; #中等精度
-uniform verc4 u_Color;
+//中等精度
+precision mediump float;
+uniform vec4 u_Color;
 
 void main()
 {

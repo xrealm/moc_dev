@@ -1,4 +1,4 @@
-package com.mao.hockey.utils;
+package com.mao.hockey.util;
 
 import android.content.Context;
 
@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
  * Created by Mao on 2017/3/19.
  */
 
-public class GLUtil {
+public class OpenGLUtil {
 
     public static String readShaderFromRaw(Context context, int resId) {
         StringBuilder builder = new StringBuilder();

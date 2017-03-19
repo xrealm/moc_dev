@@ -1,6 +1,4 @@
-package com.mao.hockey.utils;
-
-import android.icu.util.Output;
+package com.mao.hockey.util;
 
 import java.io.IOException;
 import java.io.InputStream;
