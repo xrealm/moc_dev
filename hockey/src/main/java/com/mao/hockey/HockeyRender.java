@@ -3,6 +3,7 @@ package com.mao.hockey;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.opengl.Matrix;
 
 import com.mao.hockey.util.OpenGLUtil;
 import com.mao.hockey.util.ShaderHelper;
@@ -20,6 +21,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class HockeyRender implements GLSurfaceView.Renderer {
 
+    private static final String U_MATRIX = "u_Matrix";
     private static final String A_COLOR = "a_Color";
     private static final int COLOR_COMPOMENT_COUNT = 3;
     private static final String A_POSITION = "a_Position";
@@ -31,6 +33,8 @@ public class HockeyRender implements GLSurfaceView.Renderer {
     private int program;
     private int aPositionLocation;
     private int aColorLocation;
+    private float[] projectionMatrix = new float[16];
+    private int uMatrixLocation;
 
     public HockeyRender(Context context) {
         mContext = context;
@@ -38,19 +42,19 @@ public class HockeyRender implements GLSurfaceView.Renderer {
                 // order of coordinates: x,y,r,g,b
                 // triangle fan
                 0, 0, 1f, 1f, 1f,
-                -0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
-                0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
-                0.5f, 0.5f, 0.7f, 0.7f, 0.7f,
-                -0.5f, 0.5f, 0.7f, 0.7f, 0.7f,
-                -0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
+                -0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
+                0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
+                0.5f, 0.8f, 0.7f, 0.7f, 0.7f,
+                -0.5f, 0.8f, 0.7f, 0.7f, 0.7f,
+                -0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
 
                 // Line 1
                 -0.5f, 0f, 1f, 0f, 0f,
                 0.5f, 0f, 1f, 0f, 0f,
 
                 // Mallets
-                0f, -0.25f, 0f, 0f, 1f,
-                0f, 0.25f, 1f, 0f, 0f,
+                0f, -0.4f, 0f, 0f, 1f,
+                0f, 0.4f, 1f, 0f, 0f,
         };
 
         vertexData = ByteBuffer.allocateDirect(tableVerticesWithTriangles.length * BYTES_PER_FLOAT)
@@ -73,6 +77,8 @@ public class HockeyRender implements GLSurfaceView.Renderer {
         aColorLocation = GLES20.glGetAttribLocation(program, A_COLOR);
         //获取attribute位置，给a_Position赋值
         aPositionLocation = GLES20.glGetAttribLocation(program, A_POSITION);
+        // matrix
+        uMatrixLocation = GLES20.glGetUniformLocation(program, U_MATRIX);
         //保证从0开始读取数据
         vertexData.position(0);
         GLES20.glVertexAttribPointer(aPositionLocation, POSITION_COMPOMENT_COUNT,
@@ -88,11 +94,20 @@ public class HockeyRender implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         GLES20.glViewport(0, 0, width, height);
+        float aspectRatio = width > height ? (float) width / height : (float) height / width;
+        if (width > height) {
+            //land
+            Matrix.orthoM(projectionMatrix, 0, -aspectRatio, aspectRatio, -1.25f, 1.25f, -1f, 1f);
+        } else {
+            //protrait
+            Matrix.orthoM(projectionMatrix, 0, -0.8f, 0.8f, -aspectRatio + 0.2f, aspectRatio - 0.2f, -1f, 1f);
+        }
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+        GLES20.glUniformMatrix4fv(uMatrixLocation, 1, false, projectionMatrix, 0);
         //更新u_Color的值
 //        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, 6);
