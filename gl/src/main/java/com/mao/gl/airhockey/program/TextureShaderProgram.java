@@ -22,7 +22,6 @@ public class TextureShaderProgram extends ShaderProgram {
 
         aPositionLocation = GLES20.glGetAttribLocation(mProgram, A_POSITION);
         aTextureCoordinatesLocation = GLES20.glGetAttribLocation(mProgram, A_TEXTURE_COORDINATES);
-
     }
 
     /**
