@@ -26,7 +26,7 @@ public class HockeyRender implements GLSurfaceView.Renderer {
     private static final int COLOR_COMPOMENT_COUNT = 3;
     private static final String A_POSITION = "a_Position";
     private static final int BYTES_PER_FLOAT = 4;
-    private static final int POSITION_COMPOMENT_COUNT = 2;
+    private static final int POSITION_COMPOMENT_COUNT = 4;
     private static final int STRIDE = (POSITION_COMPOMENT_COUNT + COLOR_COMPOMENT_COUNT) * BYTES_PER_FLOAT;
     private FloatBuffer vertexData;
     private Context mContext;
@@ -39,22 +39,22 @@ public class HockeyRender implements GLSurfaceView.Renderer {
     public HockeyRender(Context context) {
         mContext = context;
         float[] tableVerticesWithTriangles = {
-                // order of coordinates: x,y,r,g,b
+                // order of coordinates: x,y,w,r,g,b
                 // triangle fan
-                0, 0, 1f, 1f, 1f,
-                -0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
-                0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
-                0.5f, 0.8f, 0.7f, 0.7f, 0.7f,
-                -0.5f, 0.8f, 0.7f, 0.7f, 0.7f,
-                -0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
+                0, 0, 0, 1.5f, 1f, 1f, 1f,
+                -0.5f, -0.8f, 0, 1f, 0.7f, 0.7f, 0.7f,
+                0.5f, -0.8f, 0, 1f, 0.7f, 0.7f, 0.7f,
+                0.5f, 0.8f, 0, 2f, 0.7f, 0.7f, 0.7f,
+                -0.5f, 0.8f, 0, 2f, 0.7f, 0.7f, 0.7f,
+                -0.5f, -0.8f, 0, 1f, 0.7f, 0.7f, 0.7f,
 
                 // Line 1
-                -0.5f, 0f, 1f, 0f, 0f,
-                0.5f, 0f, 1f, 0f, 0f,
+                -0.5f, 0f, 0, 1.5f, 1f, 0f, 0f,
+                0.5f, 0f, 0, 1.5f, 1f, 0f, 0f,
 
                 // Mallets
-                0f, -0.4f, 0f, 0f, 1f,
-                0f, 0.4f, 1f, 0f, 0f,
+                0f, -0.4f, 0, 1.25f, 0f, 0f, 1f,
+                0f, 0.4f, 0, 1.75f, 1f, 0f, 0f,
         };
 
         vertexData = ByteBuffer.allocateDirect(tableVerticesWithTriangles.length * BYTES_PER_FLOAT)
