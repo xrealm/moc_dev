@@ -34,6 +34,7 @@ public class HockeyRender implements GLSurfaceView.Renderer {
     private int aPositionLocation;
     private int aColorLocation;
     private float[] projectionMatrix = new float[16];
+    private float[] modelMatrix = new float[16];//模型矩阵，把桌子平移出来
     private int uMatrixLocation;
 
     public HockeyRender(Context context) {
@@ -94,14 +95,14 @@ public class HockeyRender implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         GLES20.glViewport(0, 0, width, height);
-        float aspectRatio = width > height ? (float) width / height : (float) height / width;
-        if (width > height) {
-            //land
-            Matrix.orthoM(projectionMatrix, 0, -aspectRatio, aspectRatio, -1.25f, 1.25f, -1f, 1f);
-        } else {
-            //protrait
-            Matrix.orthoM(projectionMatrix, 0, -0.8f, 0.8f, -aspectRatio + 0.2f, aspectRatio - 0.2f, -1f, 1f);
-        }
+        Matrix.perspectiveM(projectionMatrix, 0, 45, (float) width / height, 1f, 10.0f);
+        //设置为单位矩阵，再平移-2
+        Matrix.setIdentityM(modelMatrix, 0);
+        Matrix.translateM(modelMatrix, 0, 0, 0, -2f);
+        float[] temp = new float[16];
+        //相乘
+        Matrix.multiplyMM(temp, 0, projectionMatrix, 0, modelMatrix, 0);
+        System.arraycopy(temp, 0, projectionMatrix, 0, temp.length);
     }
 
     @Override
