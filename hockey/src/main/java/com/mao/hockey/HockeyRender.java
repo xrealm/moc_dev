@@ -98,7 +98,8 @@ public class HockeyRender implements GLSurfaceView.Renderer {
         Matrix.perspectiveM(projectionMatrix, 0, 45, (float) width / height, 1f, 10.0f);
         //设置为单位矩阵，再平移-2
         Matrix.setIdentityM(modelMatrix, 0);
-        Matrix.translateM(modelMatrix, 0, 0, 0, -2f);
+        Matrix.translateM(modelMatrix, 0, 0, 0, -2.5f);
+        Matrix.rotateM(modelMatrix, 0, -60f, 1f, 0, 0);
         float[] temp = new float[16];
         //相乘
         Matrix.multiplyMM(temp, 0, projectionMatrix, 0, modelMatrix, 0);
