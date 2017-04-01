@@ -23,6 +23,7 @@ public class ShaderHelper {
         int shaderObjectId = GLES20.glCreateShader(type);
         if (shaderObjectId == 0) {
             Logger.w("Could not create new shader.");
+            return 0;
         }
         //bind着色器对象
         GLES20.glShaderSource(shaderObjectId, shader);
@@ -69,5 +70,17 @@ public class ShaderHelper {
         Logger.v("Results of validating program: " + validateStatus[0]
                 + "\nLog:" + GLES20.glGetProgramInfoLog(programId));
         return validateStatus[0] != 0;
+    }
+
+    public static int buildProgram(String vertexShaderSource, String fragmentShaderSource) {
+        int program;
+        // compile the shaders
+        int vertexShader = compileVertexShader(vertexShaderSource);
+        int fragmentShader = compileFragmentShader(fragmentShaderSource);
+
+        //link them
+        program = linkProgram(vertexShader, fragmentShader);
+        validateProgram(program);
+        return program;
     }
 }
