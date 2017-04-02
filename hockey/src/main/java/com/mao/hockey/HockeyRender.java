@@ -74,7 +74,7 @@ public class HockeyRender implements GLSurfaceView.Renderer {
 
         positionTableInScene();
         textureProgram.useProgram();
-        textureProgram.setUniforms(viewProjectionMatrix, texture);
+        textureProgram.setUniforms(modelViewProjectionMatrix, texture);
         table.bindData(textureProgram);
         table.draw();
 
@@ -99,7 +99,7 @@ public class HockeyRender implements GLSurfaceView.Renderer {
     private void positionObjectInScene(float x, float y, float z) {
         //物体已经被定义好，只需要旋转
         Matrix.setIdentityM(modelMatrix, 0);
-        Matrix.translateM(modelViewProjectionMatrix, 0, x, y, z);
+        Matrix.translateM(modelMatrix, 0, x, y, z);
         Matrix.multiplyMM(modelViewProjectionMatrix, 0, viewProjectionMatrix, 0, modelMatrix, 0);
     }
 
@@ -110,5 +110,17 @@ public class HockeyRender implements GLSurfaceView.Renderer {
         Matrix.rotateM(modelMatrix, 0, -90f, 1f, 0, 0);
         //viewProjectionMatrix 和modelMatrix相乘存储到modelViewProjectionMatrix
         Matrix.multiplyMM(modelViewProjectionMatrix, 0, viewProjectionMatrix, 0, modelMatrix, 0);
+    }
+
+    public void handleTouchDrag(float nomalizedX, float nomalizedY) {
+
+    }
+
+    public void handleTouchPress(float nomalizedX, float nomalizedY) {
+
+    }
+
+    public void handleTouchUp(float nomalizedX, float nomalizedY) {
+
     }
 }
