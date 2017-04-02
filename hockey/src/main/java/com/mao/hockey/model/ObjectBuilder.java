@@ -49,6 +49,13 @@ public class ObjectBuilder {
         builder.appendCircle(baseCircle, numPoints);
         builder.appendOpenCylinder(baseCylinder, numPoints);
 
+        float handleHeight = height * 0.75f;
+        float handleRadius = radius / 3f;
+        Gemetry.Circle handleCircle = new Gemetry.Circle(center.translateY(height * 0.5f), handleRadius);
+        Gemetry.Cylinder handleCylinder = new Gemetry.Cylinder(handleCircle.center.translateY(-handleHeight / 2f),
+                handleRadius, handleHeight);
+        builder.appendCircle(handleCircle, numPoints);
+        builder.appendOpenCylinder(handleCylinder, numPoints);
         return builder.build();
     }
 
@@ -71,7 +78,7 @@ public class ObjectBuilder {
 
         //构造圆的顶点
         for (int i = 0; i <= numPoints; i++) {
-            float angleInRedians = ((float) i / numPoints) * ((float) Math.PI * 2f);
+            float angleInRedians = ((float) i / (float) numPoints) * ((float) Math.PI * 2f);
             vertexData[offset++] = (float) (circle.center.x + circle.radius * Math.cos(angleInRedians));
             vertexData[offset++] = circle.center.y;
             vertexData[offset++] = (float) (circle.center.z + circle.radius * Math.sin(angleInRedians));
@@ -91,7 +98,7 @@ public class ObjectBuilder {
         float yEnd = cylinder.center.y + cylinder.height / 2f;
 
         for (int i = 0; i <= numPoints; i++) {
-            float angleInRadians = ((float) i / numPoints) * ((float) Math.PI * 2f);
+            float angleInRadians = ((float) i / (float) numPoints) * ((float) Math.PI * 2f);
             float xPosition = (float) (cylinder.center.x + cylinder.radius * Math.cos(angleInRadians));
             float zPosition = (float) (cylinder.center.z + cylinder.radius * Math.sin(angleInRadians));
             vertexData[offset++] = xPosition;
