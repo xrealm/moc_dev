@@ -20,8 +20,8 @@ public class Puck {
     public Puck(float radius, float height, int numPointsAroundPuck) {
         this.radius = radius;
         this.height = height;
-        ObjectBuilder.GenerateData generateData = ObjectBuilder.createPuck(new Gemetry.Cylinder(
-                new Gemetry.Point(0, 0, 0), radius, height), numPointsAroundPuck);
+        ObjectBuilder.GenerateData generateData = ObjectBuilder.createPuck(new Geometry.Cylinder(
+                new Geometry.Point(0, 0, 0), radius, height), numPointsAroundPuck);
         vertexArray = new VertexArray(generateData.vertexData);
         drawList = generateData.drawList;
     }

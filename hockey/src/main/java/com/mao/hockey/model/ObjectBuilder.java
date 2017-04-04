@@ -37,38 +37,38 @@ public class ObjectBuilder {
         return (numPoints + 1) * 2;
     }
 
-    public static GenerateData createMallet(Gemetry.Point center, float radius, float height, int numPoints) {
+    public static GenerateData createMallet(Geometry.Point center, float radius, float height, int numPoints) {
         int size = sizeOfCircleInVertices(numPoints) * 2 + sizeOfOpenCylinderInVertices(numPoints) * 2;
         ObjectBuilder builder = new ObjectBuilder(size);
         //first, generate the mallet base.
         float baseHeight = height * 0.25f;
 
-        Gemetry.Circle baseCircle = new Gemetry.Circle(center.translateY(-baseHeight), radius);
-        Gemetry.Cylinder baseCylinder = new Gemetry.Cylinder(center.translateY(-baseHeight / 2f),
+        Geometry.Circle baseCircle = new Geometry.Circle(center.translateY(-baseHeight), radius);
+        Geometry.Cylinder baseCylinder = new Geometry.Cylinder(center.translateY(-baseHeight / 2f),
                 radius, baseHeight);
         builder.appendCircle(baseCircle, numPoints);
         builder.appendOpenCylinder(baseCylinder, numPoints);
 
         float handleHeight = height * 0.75f;
         float handleRadius = radius / 3f;
-        Gemetry.Circle handleCircle = new Gemetry.Circle(center.translateY(height * 0.5f), handleRadius);
-        Gemetry.Cylinder handleCylinder = new Gemetry.Cylinder(handleCircle.center.translateY(-handleHeight / 2f),
+        Geometry.Circle handleCircle = new Geometry.Circle(center.translateY(height * 0.5f), handleRadius);
+        Geometry.Cylinder handleCylinder = new Geometry.Cylinder(handleCircle.center.translateY(-handleHeight / 2f),
                 handleRadius, handleHeight);
         builder.appendCircle(handleCircle, numPoints);
         builder.appendOpenCylinder(handleCylinder, numPoints);
         return builder.build();
     }
 
-    public static GenerateData createPuck(Gemetry.Cylinder puck, int numPoints) {
+    public static GenerateData createPuck(Geometry.Cylinder puck, int numPoints) {
         int size = sizeOfCircleInVertices(numPoints) + sizeOfOpenCylinderInVertices(numPoints);
         ObjectBuilder builder = new ObjectBuilder(size);
-        Gemetry.Circle puckTop = new Gemetry.Circle(puck.center.translateY(puck.height / 2f), puck.radius);
+        Geometry.Circle puckTop = new Geometry.Circle(puck.center.translateY(puck.height / 2f), puck.radius);
         builder.appendCircle(puckTop, numPoints);
         builder.appendOpenCylinder(puck, numPoints);
         return builder.build();
     }
 
-    private void appendCircle(Gemetry.Circle circle, int numPoints) {
+    private void appendCircle(Geometry.Circle circle, int numPoints) {
         final int startVertex = offset / FLOATS_PER_VERTEX;
         final int numVertices = sizeOfCircleInVertices(numPoints);
         //center point of fan
@@ -91,7 +91,7 @@ public class ObjectBuilder {
         });
     }
 
-    private void appendOpenCylinder(Gemetry.Cylinder cylinder, int numPoints) {
+    private void appendOpenCylinder(Geometry.Cylinder cylinder, int numPoints) {
         final int startVertex = offset / FLOATS_PER_VERTEX;
         final int numVertices = sizeOfOpenCylinderInVertices(numPoints);
         float yStart = cylinder.center.y - cylinder.height / 2f;

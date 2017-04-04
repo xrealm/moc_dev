@@ -19,7 +19,7 @@ public class Mallet {
     private List<ObjectBuilder.DrawCommand> drawList;
 
     public Mallet(float radius, float height, int numPointsAroiundMallet) {
-        ObjectBuilder.GenerateData generateData = ObjectBuilder.createMallet(new Gemetry.Point(0, 0, 0),
+        ObjectBuilder.GenerateData generateData = ObjectBuilder.createMallet(new Geometry.Point(0, 0, 0),
                 radius, height, numPointsAroiundMallet);
         this.radius = radius;
         this.height = height;
