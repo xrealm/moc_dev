@@ -80,7 +80,7 @@ public class ShaderHelper {
 
         //link them
         program = linkProgram(vertexShader, fragmentShader);
-        validateProgram(program);
+        boolean validate = validateProgram(program);
         return program;
     }
 }
