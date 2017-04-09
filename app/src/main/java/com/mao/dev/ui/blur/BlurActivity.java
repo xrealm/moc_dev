@@ -27,7 +27,7 @@ public class BlurActivity extends AppCompatActivity {
         findViewById(R.id.blur).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mFastImageView.requestRender();
             }
         });
     }
