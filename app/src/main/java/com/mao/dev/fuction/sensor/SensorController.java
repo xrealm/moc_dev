@@ -7,7 +7,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 
-import com.immomo.molive.foundation.util.MoliveKit;
+import com.mao.dev.AppKit;
 
 /**
  * Created by Mao on 2017/2/28.
@@ -33,7 +33,7 @@ public class SensorController implements SensorEventListener {
     private CameraFocusListener mFocusListener;
 
     private SensorController() {
-        mSensorManager = (SensorManager) MoliveKit.getAppContext().getSystemService(Context.SENSOR_SERVICE);
+        mSensorManager = (SensorManager) AppKit.getContext().getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
 
