@@ -62,7 +62,7 @@ public class GLMianActivity extends AppCompatActivity {
             TextView textView = new TextView(GLMianActivity.this);
             textView.setTextColor(0xFF2B2B2B);
             textView.setTextSize(14);
-            textView.setBackgroundColor(0x666666);
+            textView.setBackgroundColor(0xff666666);
             textView.setPadding(30, 30, 30, 30);
             textView.setGravity(Gravity.CENTER);
             RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT,

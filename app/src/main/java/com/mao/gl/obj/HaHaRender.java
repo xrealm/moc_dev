@@ -69,8 +69,8 @@ public class HaHaRender implements GLSurfaceView.Renderer {
         colorData.position(0);
 
         mProgram = ShaderHelper.buildProgram(
-                OpenGLUtil.readShaderFromRawResouce(mContext, R.raw.vertex_shader),
-                OpenGLUtil.readShaderFromRawResouce(mContext, R.raw.fragment_shader));
+                OpenGLUtil.readShaderFromRawResouce(mContext, R.raw.simple_vertex_shader),
+                OpenGLUtil.readShaderFromRawResouce(mContext, R.raw.simple_fragment_shader));
 
         mPositionLocation = GLES20.glGetAttribLocation(mProgram, "vPosition");
         GLES20.glEnableVertexAttribArray(mPositionLocation);
