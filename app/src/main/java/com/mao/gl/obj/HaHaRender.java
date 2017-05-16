@@ -1,4 +1,4 @@
-package com.mao.gl;
+package com.mao.gl.obj;
 
 import android.content.Context;
 import android.opengl.GLES20;
@@ -7,6 +7,7 @@ import android.opengl.Matrix;
 
 import com.mao.dev.R;
 import com.mao.dev.ui.blur.ShaderHelper;
+import com.mao.gl.OpenGLUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
