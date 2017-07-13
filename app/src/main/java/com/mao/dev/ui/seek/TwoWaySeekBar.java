@@ -38,7 +38,7 @@ public class TwoWaySeekBar extends View {
          *                 was set by {@link android.widget.ProgressBar#setMax(int)}. (The default value for max is 200.)
          * @param fromUser True if the progress change was initiated by the user.
          */
-        void onProgressChanged(TwoWaySeekBar seekBar, int progress, boolean fromUser);
+        void onProgressChanged(TwoWaySeekBar seekBar, int touchX, int progress, boolean fromUser);
 
         /**
          * Notification that the user has started a touch gesture. Clients may want to use this
@@ -124,8 +124,7 @@ public class TwoWaySeekBar extends View {
         mBasePaint.setStyle(Paint.Style.STROKE);
 
         mScaledTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-
-        setProgress(-30);
+        mContentRect = new Rect();
     }
 
     @Override
@@ -159,16 +158,19 @@ public class TwoWaySeekBar extends View {
             int paddingRight = getPaddingRight();
             int paddingBottom = getPaddingBottom();
             mThumbOffset = normalizeToOffset(mProgress);
+            if (mThumbOffset <= 0) {
+                mThumbOffset = mDefaultThumbOffset;
+            }
             Rect rect = new Rect((int) (mThumbOffset - mThumb.getIntrinsicWidth() / 2), paddingTop,
                     (int) (mThumbOffset + mThumb.getIntrinsicWidth() / 2), mContentRect.bottom - paddingBottom);
             mThumb.setBounds(rect);
         }
     }
 
-    private void setThumbRect(float progress) {
+    private void setThumbRectByOffset(int thumbOffset) {
         if (mThumb != null) {
             Rect bounds = mThumb.getBounds();
-            int left = (int) (normalizeToOffset(progress)) - bounds.width() / 2;
+            int left = thumbOffset - bounds.width() / 2;
             Rect drawRect = new Rect(left, bounds.top, left + bounds.width(), bounds.bottom);
             mThumb.setBounds(drawRect);
         }
@@ -180,7 +182,8 @@ public class TwoWaySeekBar extends View {
 
         }
         mProgress = progress;
-        onProgressChanged(progress, false);
+        int touchX = (int) normalizeToOffset(progress);
+        onProgressChanged(progress, touchX, false);
         invalidate();
     }
 
@@ -209,7 +212,7 @@ public class TwoWaySeekBar extends View {
     }
 
     private float offsetToNormalize(float thumbOffset) {
-        return thumbOffset / (float) mWidth * TOTAL_PROGRESS;
+        return (thumbOffset - mContentRect.left) / (float) mContentRect.width() * TOTAL_PROGRESS;
     }
 
     @Override
@@ -231,8 +234,8 @@ public class TwoWaySeekBar extends View {
     }
 
     private void drawBaseTrack(Canvas canvas) {
-        mBasePaint.setColor(0x20ffffff);
-        canvas.drawLine(getPaddingLeft(), mHeight / 2, mWidth - getPaddingRight(), mHeight / 2, mBasePaint);
+        mBasePaint.setColor(mBackgroundProgressColor);
+        canvas.drawLine(mContentRect.left, mHeight / 2, mContentRect.left + mContentRect.width(), mHeight / 2, mBasePaint);
     }
 
     private void drawTrack(Canvas canvas) {
@@ -316,16 +319,22 @@ public class TwoWaySeekBar extends View {
 
     private void trackTouchEvent(MotionEvent event) {
         final int x = Math.round(event.getX());
-        final int y = Math.round(event.getY());
+        final int halfThumbWidth = mThumb != null ? mThumb.getBounds().width() >> 1 : 0;
         final int availableWidth = mContentRect.left + mContentRect.width();
-        if (x <= 0) {
-            mThumbOffset = mContentRect.left;
-        } else if (x >= availableWidth) {
-            mThumbOffset = availableWidth;
+        if (x < halfThumbWidth) {
+            mThumbOffset = mContentRect.left + halfThumbWidth;
+        } else if (x > availableWidth - halfThumbWidth) {
+            mThumbOffset = availableWidth - halfThumbWidth;
         } else {
             mThumbOffset = x;
         }
-        int progress = (int) offsetToNormalize(mThumbOffset);
+        int xOffset = 0;
+        if (x < 0) {
+            xOffset = 0;
+        } else if (x > mWidth) {
+            xOffset = mWidth;
+        }
+        int progress = (int) offsetToNormalize(xOffset);
         if (progress == BASE_PROGRESS) {
             progress = 0;
         } else if (progress < BASE_PROGRESS) {
@@ -333,18 +342,18 @@ public class TwoWaySeekBar extends View {
         } else {
             progress -= BASE_PROGRESS;
         }
-        setThumbRect(progress);
-        onProgressChanged(progress, true);
+        setThumbRectByOffset((int) mThumbOffset);
+        onProgressChanged(progress, (int) mThumbOffset, true);
     }
 
     private int dp2px(float dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
     }
 
-    void onProgressChanged(int progress, boolean fromUser) {
+    void onProgressChanged(int progress, int touchX, boolean fromUser) {
         mProgress = progress;
         if (mOnSeekBarChangeListener != null) {
-            mOnSeekBarChangeListener.onProgressChanged(this, progress, fromUser);
+            mOnSeekBarChangeListener.onProgressChanged(this, touchX, progress, fromUser);
         }
     }
 

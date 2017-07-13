@@ -9,19 +9,19 @@
         android:layout_gravity="center"
         android:background="#bf010101"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="100dp">
 
         <com.mao.dev.ui.seek.TwoWaySeekBar
             android:id="@+id/seekbar"
-            app:thumb="@drawable/ic_launcher"
-            app:progress_color="@color/colorAccent"
-            app:background_progress_color="@color/colorPrimary"
-            app:basepoint_color="@color/colorPrimaryDark"
-            android:paddingLeft="3dp"
-            android:paddingRight="3dp"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/tv_progress"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </FrameLayout>
 
 </FrameLayout>
