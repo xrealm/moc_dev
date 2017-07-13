@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
@@ -12,6 +13,10 @@
 
         <com.mao.dev.ui.seek.TwoWaySeekBar
             android:id="@+id/seekbar"
+            app:thumb="@drawable/ic_launcher"
+            app:progress_color="@color/colorAccent"
+            app:background_progress_color="@color/colorPrimary"
+            app:basepoint_color="@color/colorPrimaryDark"
             android:paddingLeft="3dp"
             android:paddingRight="3dp"
             android:layout_width="200dp"

@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -67,6 +68,9 @@ public class TwoWaySeekBar extends View {
     Drawable mThumb;
     private Paint mBasePaint;
     private Paint mHighlightPaint;
+    private int mProgressColor = 0xffff2d55;
+    private int mBackgroundProgressColor = 0x20ffffff;
+    private int mBasePointColor = 0xffffffff;
 
     private int mDefaultThumbOffset;//thumb基点
     private float mThumbOffset;
@@ -95,22 +99,28 @@ public class TwoWaySeekBar extends View {
     }
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-
+        mThumb = getResources().getDrawable(R.drawable.hani_shape_thumb);
         if (attrs != null) {
             TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.TwoWaySeekBar, defStyleAttr, defStyleRes);
-
+            setProgressColor(array.getColor(R.styleable.TwoWaySeekBar_progress_color, mProgressColor));
+            setBackgroundProgressColor(array.getColor(R.styleable.TwoWaySeekBar_background_progress_color, mBackgroundProgressColor));
+            setBasePointColor(array.getColor(R.styleable.TwoWaySeekBar_basepoint_color, mBasePointColor));
+            Drawable drawable = array.getDrawable(R.styleable.TwoWaySeekBar_thumb);
+            if (drawable != null) {
+                mThumb = drawable;
+            }
             array.recycle();
         }
         mMinHeight = dp2px(3);
-        mThumb = getResources().getDrawable(android.support.v7.appcompat.R.drawable.abc_seekbar_thumb_material);
+
         mBasePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBasePaint.setStrokeWidth(mMinHeight);
-        mBasePaint.setColor(0x20ffffff);
+        mBasePaint.setColor(mBackgroundProgressColor);
         mBasePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         mHighlightPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mHighlightPaint.setStrokeWidth(mMinHeight);
-        mHighlightPaint.setColor(0xffff2d55);
+        mHighlightPaint.setColor(mProgressColor);
         mBasePaint.setStyle(Paint.Style.STROKE);
 
         mScaledTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
@@ -174,6 +184,26 @@ public class TwoWaySeekBar extends View {
         invalidate();
     }
 
+    public void setThumb(@NonNull Drawable thumb) {
+        mThumb = thumb;
+        initThumb();
+    }
+
+    private void setProgressColor(int color) {
+        mProgressColor = color;
+        invalidate();
+    }
+
+    private void setBackgroundProgressColor(int color) {
+        mBackgroundProgressColor = color;
+        invalidate();
+    }
+
+    private void setBasePointColor(int color) {
+        mBasePointColor = color;
+        invalidate();
+    }
+
     private float normalizeToOffset(float progress) {
         return mContentRect.left + (progress + BASE_PROGRESS) / (float) TOTAL_PROGRESS * mContentRect.width();
     }
@@ -214,7 +244,7 @@ public class TwoWaySeekBar extends View {
     }
 
     private void drawBasePoint(Canvas canvas) {
-        mBasePaint.setColor(0xffffffff);
+        mBasePaint.setColor(mBasePointColor);
         canvas.drawCircle(mWidth / 2, mHeight / 2, dp2px(0.75f), mBasePaint);
     }
 
