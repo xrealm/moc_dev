@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
     <application
         android:name=".AppApplication"
@@ -12,13 +14,25 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.mao.dev.MainActivity">
+        <activity android:name="com.mao.dev.ui.path.PathActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.screencap.PlayScreenRecordActivity"/>
+
+        <activity android:name="com.mao.gl.obj.GLObjActivity"/>
+
+        <activity android:name="com.mao.test.A"/>
+        <activity android:name="com.mao.test.B"
+                  android:launchMode="singleTask"
+            />
+        <activity android:name="com.mao.test.C"/>
+        <activity android:name="com.mao.test.D"/>
+        <activity android:name="com.mao.test.E"/>
     </application>
 
 </manifest>
