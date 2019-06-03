@@ -1,6 +1,7 @@
 package com.mao.dev;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,12 +9,16 @@ import android.graphics.NinePatch;
 import android.graphics.Rect;
 import android.graphics.drawable.NinePatchDrawable;
 import android.net.wifi.WifiManager;
+import android.os.Environment;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 
 import com.orhanobut.logger.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
@@ -141,5 +146,77 @@ public class AppKit {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static Bitmap readBitmapFromAsset(String name) {
+        AssetManager assetManager = mContext.getAssets();
+        InputStream inputStream = null;
+        FileOutputStream fos = null;
+        InputStream in = null;
+        Bitmap bitmap = null;
+        File file = new File(getTextStickerFolder(), name);
+        try {
+            inputStream = assetManager.open(name);
+            fos = new FileOutputStream(file);
+            byte[] buffer = new byte[128];
+            int length = 0;
+            while ((length = inputStream.read(buffer)) > -1) {
+                fos.write(buffer, 0, length);
+            }
+            FileUtil.unzip(file.getAbsolutePath(), getTextStickerFolder().getAbsolutePath() + "/");
+//            bitmap = getBitmapFromFile(name.substring(0, name.lastIndexOf(".")) + ".png");
+            in = new FileInputStream(new File(getTextStickerFolder(), "textsticker.png"));
+            return decodeBitmap(in, R.drawable.ic_launcher);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return bitmap;
+    }
+
+    private static Bitmap decodeBitmap(InputStream is, int resId) {
+        Rect pad = new Rect();
+        Resources resources = getResources();
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inScreenDensity = resources.getDisplayMetrics().densityDpi;
+        TypedValue value = new TypedValue();
+        resources.getValue(resId, value, false);
+
+        final int density = value.density;
+        if (density == TypedValue.DENSITY_DEFAULT) {
+            opts.inDensity = DisplayMetrics.DENSITY_DEFAULT;
+        } else if (density != TypedValue.DENSITY_NONE) {
+            opts.inDensity = density;
+        }
+        if (opts.inTargetDensity == 0) {
+            opts.inTargetDensity = resources.getDisplayMetrics().densityDpi;
+        }
+
+        return BitmapFactory.decodeStream(is, pad, opts);
+    }
+
+    private static File getTextStickerFolder() {
+        return new File(Environment.getExternalStorageDirectory().getAbsolutePath(),"/immomo/textsticker");
     }
 }

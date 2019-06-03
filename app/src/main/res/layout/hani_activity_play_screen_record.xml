@@ -4,14 +4,16 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <VideoView
+    <com.mao.dev.ui.screencap.FullVideoView
         android:id="@+id/vv_play_record"
+        android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
     <ImageView
         android:id="@+id/iv_screen_record_thumb"
         android:scaleType="centerCrop"
+        android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

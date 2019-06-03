@@ -11,6 +11,11 @@
         android:layout_width="150dp"
         android:layout_height="50dp"/>
 
+    <com.mao.dev.ui.progress.CircleProgressView
+        android:id="@+id/circle_progress"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
+
     <TextView
         android:id="@+id/tv_change"
         android:text="change change"

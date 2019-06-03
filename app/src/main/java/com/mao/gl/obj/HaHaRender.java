@@ -35,17 +35,21 @@ public class HaHaRender implements GLSurfaceView.Renderer {
     private float[] mViewMatrix = new float[16];
     private float[] mMvpMatrix = new float[16];
 
-    float[] vCoords = {
-            0f, 0.5f, 0f,
-            -0.5f, -0.5f, 0f,
-            0.5f, -0.5f, 0
-    };
+//    float[] vCoords = {
+//            0f, 0.5f, 0f,
+//            -0.5f, -0.5f, 0f,
+//            0.5f, -0.5f, 0
+//    };
+
+    float[] vCoords = createPosition(6, 0.5f);
 
     float[] vColor = {
             1.0f, 0.0f, 0.0f, 1.0f,
             0.0f, 1.0f, 0.0f, 1.0f,
             0.0f, 0.0f, 1.0f, 1.0f
     };
+
+
 
     public HaHaRender(Context context) {
         mContext = context;
@@ -55,11 +59,11 @@ public class HaHaRender implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         GLES20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-        float[] circleVertex = createPosition(6, 0.5f);
-        FloatBuffer vertexData = ByteBuffer.allocateDirect(circleVertex.length * BYTES_PER_FLOAT)
+        GLES20.glEnable(GLES20.GL_DEPTH_BUFFER_BIT);
+        FloatBuffer vertexData = ByteBuffer.allocateDirect(vCoords.length * BYTES_PER_FLOAT)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()
-                .put(circleVertex);
+                .put(vCoords);
         vertexData.position(0);
 
         FloatBuffer colorData = ByteBuffer.allocateDirect(vColor.length * BYTES_PER_FLOAT)

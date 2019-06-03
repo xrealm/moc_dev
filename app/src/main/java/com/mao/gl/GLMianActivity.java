@@ -65,7 +65,7 @@ public class GLMianActivity extends AppCompatActivity {
             textView.setBackgroundColor(0xff666666);
             textView.setPadding(30, 30, 30, 30);
             textView.setGravity(Gravity.CENTER);
-            RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT,
+            RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(getResources().getDisplayMetrics().widthPixels,
                     RecyclerView.LayoutParams.WRAP_CONTENT);
             params.bottomMargin = 20;
             return new ViewHolder(textView);

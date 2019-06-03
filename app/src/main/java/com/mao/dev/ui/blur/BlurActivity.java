@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.mao.dev.R;
+import com.mao.dev.fuction.sensor.SensorController;
 
 /**
  * Created by Mao on 2017/4/6.
@@ -30,6 +31,8 @@ public class BlurActivity extends AppCompatActivity {
                 mFastImageView.requestRender();
             }
         });
+
+        SensorController.getInstance().start();
     }
 
     @Override

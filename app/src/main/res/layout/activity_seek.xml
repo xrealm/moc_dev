@@ -9,18 +9,37 @@
         android:layout_gravity="center"
         android:background="#bf010101"
         android:layout_width="match_parent"
-        android:layout_height="100dp">
+        android:layout_height="200dp">
 
         <com.mao.dev.ui.seek.TwoWaySeekBar
             android:id="@+id/seekbar"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            android:layout_marginTop="50dp"/>
 
         <TextView
             android:id="@+id/tv_progress"
             android:gravity="center"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.mao.dev.ui.seek.SearchView
+            android:id="@+id/search_view"
+            android:layout_marginTop="100dp"
+            app:iconifiedByDefault="false"
+            android:background="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"/>
+
+        <SeekBar
+            android:layout_marginTop="20dp"
+            android:minHeight="3dp"
+            android:progress="30"
+            android:secondaryProgress="50"
+            android:maxHeight="3dp"
+            android:progressDrawable="@drawable/seekbar_bg"
+            android:thumb="@drawable/hani_icon_music_playing_thumb"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </FrameLayout>
 

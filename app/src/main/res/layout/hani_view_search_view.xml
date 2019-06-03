@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+    <TextView
+        android:id="@+id/tv_search_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:padding="4dp"
+        android:visibility="gone"
+        android:text="取消"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/tv_search_cancel">
+
+        <ImageView
+            android:id="@+id/iv_search_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:visibility="gone"
+            android:src="@android:drawable/ic_menu_search"/>
+
+        <ImageView
+            android:id="@+id/iv_search_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:visibility="gone"
+            android:padding="2dp"
+            android:src="@android:drawable/ic_menu_delete"/>
+
+        <android.support.v7.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:layout_marginLeft="5dp"
+            android:layout_toLeftOf="@id/iv_search_clear"
+            android:layout_toRightOf="@id/iv_search_icon"
+            android:background="@null"
+            android:imeOptions="actionSearch"
+            android:maxLines="1"/>
+
+        <TextView
+            android:id="@+id/tv_search_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:drawableLeft="@android:drawable/ic_menu_search"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="搜索"
+            android:textColor="#aaaaaa"
+            android:textSize="14dp"/>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

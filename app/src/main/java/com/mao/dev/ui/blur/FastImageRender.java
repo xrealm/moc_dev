@@ -26,61 +26,77 @@ public class FastImageRender implements GLSurfaceView.Renderer {
     private static final int BYTES_PER_FLOAT = 4;
 
     public static final String ATTRIBUTE_POSITION = "position";
+    public static final String U_MATRIX = "u_Matrix";
     public static final String ATTRIBUTE_TEXCOORD = "inputTextureCoordinate";
     public static final String VARYING_TEXCOORD = "textureCoordinate";
     protected static final String UNIFORM_TEXTUREBASE = "inputImageTexture";
     public static final String UNIFORM_TEXTURE0 = UNIFORM_TEXTUREBASE + 0;
 
-    protected static final String UNIFORM_TEXELWIDTH = "texelWidthOffset";
-    protected static final String UNIFORM_TEXELHEIGHT = "texelHeightOffset";
+//    protected static final String UNIFORM_TEXELWIDTH = "texelWidthOffset";
+//    protected static final String UNIFORM_TEXELHEIGHT = "texelHeightOffset";
     private final Context context;
 
+    private int uMatrix;
     protected int programHandle;
     protected int textureHandle;
     protected int positionHandle;
     protected int texCoordHandle;
     protected int texture_in;
 
-    protected float texelWidth;
-    protected float texelHeight;
-    private int texelWidthHandle;
-    private int texelHeightHandle;
+//    protected float texelWidth;
+//    protected float texelHeight;
+//    private int texelWidthHandle;
+//    private int texelHeightHandle;
 
     private final FloatBuffer renderVertices;
     private final FloatBuffer textureVertices;
+
+    private float[] viewMatrix = new float[16];
+    private float[] projectMatrix = new float[16];
+    private float[] viewProjectMatrix = new float[16];
 
     private String getVertexShader() {
         return
                 "attribute vec4 " + ATTRIBUTE_POSITION + ";\n"
                         + "attribute vec2 " + ATTRIBUTE_TEXCOORD + ";\n"
                         + "varying vec2 " + VARYING_TEXCOORD + ";\n"
+                        + "uniform mat4 " + U_MATRIX + ";\n"
 
                         + "void main() {\n"
                         + "  " + VARYING_TEXCOORD + " = " + ATTRIBUTE_TEXCOORD + ";\n"
-                        + "   gl_Position = " + ATTRIBUTE_POSITION + ";\n"
+                        + "   gl_Position = " + U_MATRIX + "*" + ATTRIBUTE_POSITION + ";\n"
                         + "}\n";
     }
 
     private String getFragmentShader() {
+//        return
+//                "precision mediump float;\n"
+//                        + "uniform sampler2D " + UNIFORM_TEXTURE0 + ";\n"
+//                        + "varying vec2 " + VARYING_TEXCOORD + ";\n"
+//                        + "uniform float " + UNIFORM_TEXELWIDTH + ";\n"
+//                        + "uniform float " + UNIFORM_TEXELHEIGHT + ";\n"
+//
+//
+//                        + "void main(){\n"
+//                        + "   vec2 firstOffset = vec2(1.3846153846 * " + UNIFORM_TEXELWIDTH + ", 1.3846153846 * " + UNIFORM_TEXELHEIGHT + ");\n"
+//                        + "   vec2 secondOffset = vec2(3.2307692308 * " + UNIFORM_TEXELWIDTH + ", 3.2307692308 * " + UNIFORM_TEXELHEIGHT + ");\n"
+//                        + "   vec3 sum = vec3(0,0,0);\n"
+//                        + "   vec4 color = texture2D(" + UNIFORM_TEXTURE0 + ", " + VARYING_TEXCOORD + ");\n"
+//                        + "   sum += color.rgb * 0.2270270270;\n"
+//                        + "   sum += texture2D(" + UNIFORM_TEXTURE0 + ", " + VARYING_TEXCOORD + " - firstOffset).rgb * 0.3162162162;\n"
+//                        + "   sum += texture2D(" + UNIFORM_TEXTURE0 + ", " + VARYING_TEXCOORD + " + firstOffset).rgb * 0.3162162162;\n"
+//                        + "   sum += texture2D(" + UNIFORM_TEXTURE0 + ", " + VARYING_TEXCOORD + " - secondOffset).rgb * 0.0702702703;\n"
+//                        + "   sum += texture2D(" + UNIFORM_TEXTURE0 + ", " + VARYING_TEXCOORD + " + secondOffset).rgb * 0.0702702703;\n"
+//                        + "   gl_FragColor = vec4(sum, color.a);\n"
+//                        + "}\n";
+
         return
                 "precision mediump float;\n"
                         + "uniform sampler2D " + UNIFORM_TEXTURE0 + ";\n"
                         + "varying vec2 " + VARYING_TEXCOORD + ";\n"
-                        + "uniform float " + UNIFORM_TEXELWIDTH + ";\n"
-                        + "uniform float " + UNIFORM_TEXELHEIGHT + ";\n"
-
 
                         + "void main(){\n"
-                        + "   vec2 firstOffset = vec2(1.3846153846 * " + UNIFORM_TEXELWIDTH + ", 1.3846153846 * " + UNIFORM_TEXELHEIGHT + ");\n"
-                        + "   vec2 secondOffset = vec2(3.2307692308 * " + UNIFORM_TEXELWIDTH + ", 3.2307692308 * " + UNIFORM_TEXELHEIGHT + ");\n"
-                        + "   vec3 sum = vec3(0,0,0);\n"
-                        + "   vec4 color = texture2D(" + UNIFORM_TEXTURE0 + ", " + VARYING_TEXCOORD + ");\n"
-                        + "   sum += color.rgb * 0.2270270270;\n"
-                        + "   sum += texture2D(" + UNIFORM_TEXTURE0 + ", " + VARYING_TEXCOORD + " - firstOffset).rgb * 0.3162162162;\n"
-                        + "   sum += texture2D(" + UNIFORM_TEXTURE0 + ", " + VARYING_TEXCOORD + " + firstOffset).rgb * 0.3162162162;\n"
-                        + "   sum += texture2D(" + UNIFORM_TEXTURE0 + ", " + VARYING_TEXCOORD + " - secondOffset).rgb * 0.0702702703;\n"
-                        + "   sum += texture2D(" + UNIFORM_TEXTURE0 + ", " + VARYING_TEXCOORD + " + secondOffset).rgb * 0.0702702703;\n"
-                        + "   gl_FragColor = vec4(sum, color.a);\n"
+                        + "   gl_FragColor = texture2D(" + UNIFORM_TEXTURE0 + "," + VARYING_TEXCOORD + ");\n"
                         + "}\n";
     }
 
@@ -132,8 +148,10 @@ public class FastImageRender implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         GLES20.glViewport(0, 0, width, height);
-        texelWidth = 1.0f / (float) width;
-        texelHeight = 1.0f / (float) height;
+//        texelWidth = 1.0f / (float) width;
+//        texelHeight = 1.0f / (float) height;
+
+
     }
 
     @Override
@@ -218,8 +236,8 @@ public class FastImageRender implements GLSurfaceView.Renderer {
         texCoordHandle = GLES20.glGetAttribLocation(programHandle, ATTRIBUTE_TEXCOORD);
         textureHandle = GLES20.glGetUniformLocation(programHandle, UNIFORM_TEXTURE0);
 
-        texelWidthHandle = GLES20.glGetUniformLocation(programHandle, UNIFORM_TEXELWIDTH);
-        texelHeightHandle = GLES20.glGetUniformLocation(programHandle, UNIFORM_TEXELHEIGHT);
+//        texelWidthHandle = GLES20.glGetUniformLocation(programHandle, UNIFORM_TEXELWIDTH);
+//        texelHeightHandle = GLES20.glGetUniformLocation(programHandle, UNIFORM_TEXELHEIGHT);
     }
 
     private void passShaderValues() {
@@ -230,11 +248,11 @@ public class FastImageRender implements GLSurfaceView.Renderer {
         GLES20.glVertexAttribPointer(texCoordHandle, 2, GLES20.GL_FLOAT, false, 0, textureVertices);
         GLES20.glEnableVertexAttribArray(texCoordHandle);
 
+        GLES20.glUniform1i(textureHandle, 0);
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texture_in);
-        GLES20.glUniform1i(textureHandle, 0);
 
-        GLES20.glUniform1f(texelWidthHandle, texelWidth);
-        GLES20.glUniform1f(texelHeightHandle, texelHeight);
+//        GLES20.glUniform1f(texelWidthHandle, texelWidth);
+//        GLES20.glUniform1f(texelHeightHandle, texelHeight);
     }
 }
