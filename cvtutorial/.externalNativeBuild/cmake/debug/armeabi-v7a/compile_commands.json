@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/Users/Mao/code/demo/moc_dev/cvtutorial/.externalNativeBuild/cmake/debug/armeabi-v7a",
+  "command": "/Users/Mao/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ --target=armv7-none-linux-androideabi21 --gcc-toolchain=/Users/Mao/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/Mao/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot  -Dnative_lib_EXPORTS -I../../../../src/main/cpp/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mfpu=vfpv3-d16 -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security -stdlib=libc++ -std=c++11 -fexceptions -frtti -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/native-lib.dir/src/main/cpp/native-lib.cpp.o -c /Users/Mao/code/demo/moc_dev/cvtutorial/src/main/cpp/native-lib.cpp",
+  "file": "/Users/Mao/code/demo/moc_dev/cvtutorial/src/main/cpp/native-lib.cpp"
+}
+]

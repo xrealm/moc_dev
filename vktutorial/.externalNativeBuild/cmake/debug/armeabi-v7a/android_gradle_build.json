@@ -1,0 +1,41 @@
+{
+  "stringTable": {
+    "0": "/Users/Mao/code/demo/moc_dev/vktutorial/.externalNativeBuild/cmake/debug/armeabi-v7a",
+    "1": "--target=armv7-none-linux-androideabi24 --gcc-toolchain=/Users/Mao/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/Mao/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -I/Users/Mao/Library/Android/sdk/ndk-bundle/sources/android/native_app_glue -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mfpu=vfpv3-d16 -fno-addrsig -march=armv7-a -mthumb -mfpu=neon -Wa,--noexecstack -Wformat -Werror=format-security -O0 -fno-limit-debug-info -fPIC",
+    "2": "-g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mfpu=vfpv3-d16 -fno-addrsig -march=armv7-a -mthumb -mfpu=neon -Wa,--noexecstack -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC  "
+  },
+  "buildFiles": [
+    "/Users/Mao/Library/Android/sdk/ndk-bundle/build/cmake/android.toolchain.cmake",
+    "/Users/Mao/Library/Android/sdk/ndk-bundle/build/cmake/platforms.cmake",
+    "/Users/Mao/code/demo/moc_dev/vktutorial/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/Users/Mao/Library/Android/sdk/cmake/3.10.2.4988404/bin/cmake --build /Users/Mao/code/demo/moc_dev/vktutorial/.externalNativeBuild/cmake/debug/armeabi-v7a --target clean"
+  ],
+  "libraries": {
+    "app-glue-Debug-armeabi-v7a": {
+      "buildCommand": "/Users/Mao/Library/Android/sdk/cmake/3.10.2.4988404/bin/cmake --build /Users/Mao/code/demo/moc_dev/vktutorial/.externalNativeBuild/cmake/debug/armeabi-v7a --target app-glue",
+      "buildType": "debug",
+      "toolchain": "2668713384",
+      "abi": "armeabi-v7a",
+      "artifactName": "app-glue",
+      "files": [
+        {
+          "src": "/Users/Mao/code/demo/moc_dev/vktutorial/Users/Mao/Library/Android/sdk/ndk-bundle/sources/android/native_app_glue/android_native_app_glue.c",
+          "flagsOrdinal": 2,
+          "workingDirectoryOrdinal": 0
+        }
+      ],
+      "output": "/Users/Mao/code/demo/moc_dev/vktutorial/.externalNativeBuild/cmake/debug/armeabi-v7a/libapp-glue.a"
+    }
+  },
+  "toolchains": {
+    "2668713384": {
+      "cCompilerExecutable": "/Users/Mao/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang"
+    }
+  },
+  "cFileExtensions": [
+    "c"
+  ],
+  "cppFileExtensions": []
+}

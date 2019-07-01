@@ -1,0 +1,18 @@
+{
+  "buildFiles": [
+    "/Users/Mao/Library/Android/sdk/ndk-bundle/build/cmake/android.toolchain.cmake",
+    "/Users/Mao/Library/Android/sdk/ndk-bundle/build/cmake/platforms.cmake",
+    "/Users/Mao/code/demo/moc_dev/cvtutorial/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/Users/Mao/Library/Android/sdk/cmake/3.10.2.4988404/bin/cmake --build /Users/Mao/code/demo/moc_dev/cvtutorial/.externalNativeBuild/cmake/debug/armeabi-v7a --target clean"
+  ],
+  "libraries": {
+    "native-lib-Debug-armeabi-v7a": {
+      "artifactName": "native-lib",
+      "buildCommand": "/Users/Mao/Library/Android/sdk/cmake/3.10.2.4988404/bin/cmake --build /Users/Mao/code/demo/moc_dev/cvtutorial/.externalNativeBuild/cmake/debug/armeabi-v7a --target native-lib",
+      "abi": "armeabi-v7a",
+      "output": "/Users/Mao/code/demo/moc_dev/cvtutorial/build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so"
+    }
+  }
+}

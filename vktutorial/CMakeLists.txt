@@ -9,6 +9,5 @@ add_library(app-glue STATIC ${APP_GLUE_DIR}/android_native_app_glue.c)
 set(SRC_DIR src/main/cpp)
 set(WRAPPER_DIR src/main/cpp/wrapper)
 
-add_library(vktuts SHARED
-        )
+#add_library(vktuts SHARED)
 

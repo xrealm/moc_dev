@@ -1,0 +1,18 @@
+{
+  "buildFiles": [
+    "/Users/Mao/Library/Android/sdk/ndk-bundle/build/cmake/android.toolchain.cmake",
+    "/Users/Mao/Library/Android/sdk/ndk-bundle/build/cmake/platforms.cmake",
+    "/Users/Mao/code/demo/moc_dev/vktutorial/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/Users/Mao/Library/Android/sdk/cmake/3.10.2.4988404/bin/cmake --build /Users/Mao/code/demo/moc_dev/vktutorial/.externalNativeBuild/cmake/debug/x86_64 --target clean"
+  ],
+  "libraries": {
+    "app-glue-Debug-x86_64": {
+      "artifactName": "app-glue",
+      "buildCommand": "/Users/Mao/Library/Android/sdk/cmake/3.10.2.4988404/bin/cmake --build /Users/Mao/code/demo/moc_dev/vktutorial/.externalNativeBuild/cmake/debug/x86_64 --target app-glue",
+      "abi": "x86_64",
+      "output": "/Users/Mao/code/demo/moc_dev/vktutorial/.externalNativeBuild/cmake/debug/x86_64/libapp-glue.a"
+    }
+  }
+}
