@@ -1,7 +1,7 @@
 package com.mao.dev.fuction.threadpool;
 
 import android.os.Process;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.util.concurrent.ThreadFactory;
 

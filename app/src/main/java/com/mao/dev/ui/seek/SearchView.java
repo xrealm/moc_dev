@@ -4,11 +4,10 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.ResultReceiver;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.v4.view.KeyEventCompat;
-import android.support.v7.widget.AppCompatAutoCompleteTextView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -207,7 +206,7 @@ public class SearchView extends FrameLayout {
 
             // If there is text in the query box, handle enter, and action keys
             // The search key is handled by the dialog's onKeyDown().
-            if (!isEmpty() && KeyEventCompat.hasNoModifiers(event)) {
+            if (!isEmpty() && event.hasNoModifiers()) {
                 if (event.getAction() == KeyEvent.ACTION_UP) {
                     if (keyCode == KeyEvent.KEYCODE_ENTER) {
                         v.cancelLongPress();

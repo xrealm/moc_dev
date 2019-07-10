@@ -2,9 +2,9 @@ package com.mao.rx;
 
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringDef;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringDef;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 
 import com.google.gson.Gson;

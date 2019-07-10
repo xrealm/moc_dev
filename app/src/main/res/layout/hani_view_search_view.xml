@@ -38,7 +38,7 @@
             android:padding="2dp"
             android:src="@android:drawable/ic_menu_delete"/>
 
-        <android.support.v7.widget.AppCompatAutoCompleteTextView
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:id="@+id/et_search"
             android:layout_width="match_parent"
             android:layout_height="28dp"

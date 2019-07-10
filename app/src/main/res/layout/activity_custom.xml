@@ -36,7 +36,7 @@
         android:layout_width="200dp"
         android:layout_height="250dp">
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -46,7 +46,7 @@
                 android:layout_height="match_parent"
                 android:text="mkkkkjjjjjjnn哈哈大楼房间大房间爱的看法垃圾大力开发及案例的大反馈的卷发的咖啡机爱的发空间啊扩大减肥的空间发了肯德基发来看的卷发的开发及案例的开发骄傲的弗拉科技等法律；打开了是打          立刻就拉开点发来看离开的敬爱分路口的积分可垃圾费"
                 android:textSize="20sp"/>
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
     </com.mao.dev.ui.custom.EdgeTransparentView>
 
 </LinearLayout>

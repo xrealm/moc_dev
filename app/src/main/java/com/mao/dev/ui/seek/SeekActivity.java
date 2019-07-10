@@ -1,10 +1,9 @@
 package com.mao.dev.ui.seek;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.widget.FrameLayout;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.widget.TextView;
 
 import com.mao.dev.R;

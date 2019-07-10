@@ -1,7 +1,7 @@
 package com.mao.gl;
 
 import android.content.Context;
-import android.support.annotation.RawRes;
+import androidx.annotation.RawRes;
 
 import java.io.BufferedReader;
 import java.io.IOException;
