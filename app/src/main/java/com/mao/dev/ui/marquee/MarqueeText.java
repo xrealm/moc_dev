@@ -8,13 +8,14 @@ import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.animation.LinearInterpolator;
-import android.widget.TextView;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 /**
  * Created by Mao on 16/10/7.
  */
 
-public class MarqueeText extends TextView {
+public class MarqueeText extends AppCompatTextView {
     private static final int SCROLL_DURATION = 5000;
     private ValueAnimator mScrollAnimator;
     private ValueAnimator mRestoreAnimator;
@@ -30,12 +31,6 @@ public class MarqueeText extends TextView {
 
     public MarqueeText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public MarqueeText(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 

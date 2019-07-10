@@ -9,13 +9,14 @@ import android.graphics.Paint;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.widget.EditText;
+
+import androidx.appcompat.widget.AppCompatEditText;
 
 /**
  * Created by Mao on 2016/10/18.
  */
 
-public class AutoSizeEditText extends EditText{
+public class AutoSizeEditText extends AppCompatEditText {
     private static final int ANIMATION_DURATION = 300;
 
     private int mLineLimit = 1;
@@ -35,12 +36,6 @@ public class AutoSizeEditText extends EditText{
 
     public AutoSizeEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public AutoSizeEditText(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
